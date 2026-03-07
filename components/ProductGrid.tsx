@@ -4,7 +4,7 @@ import Link from "next/link";
 import FadeIn from "@/components/FadeIn";
 import GlassCard from "@/components/GlassCard";
 
-export default function ProductGrid({ category }: { category?: string }) {
+export default function ProductGrid({ category }: { readonly category?: string }) {
     const filteredProducts = category 
         ? products.filter(p => p.category === category) 
         : products;

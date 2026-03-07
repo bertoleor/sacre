@@ -72,7 +72,7 @@ export default function Home() {
 
                             <div className="absolute bottom-8 left-8 bg-white/10 backdrop-blur-md border border-white/20 px-8 py-4 rounded-2xl">
                                 <h2 className="font-cronde text-3xl md:text-5xl text-white drop-shadow-lg">
-                                    Privilège
+                                    Privilège{" "}
                                     <span className="block text-sm font-sans tracking-widest uppercase mt-2 opacity-80">Colección Festiva</span>
                                 </h2>
                             </div>
@@ -88,7 +88,7 @@ export default function Home() {
 
             {/* Featured Products Carousel */}
             <ProductCarousel 
-                title="Novedades" 
+                title="Selección" 
                 category="bombones"
             />
 
