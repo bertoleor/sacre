@@ -2,11 +2,14 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ShoppingBag } from "lucide-react";
+import { useCart } from "@/lib/context/CartContext";
 
 export default function Navbar() {
     const [scrolled, setScrolled] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
+    const { getItemCount, toggleCart } = useCart();
+    const itemCount = getItemCount();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -33,13 +36,13 @@ export default function Navbar() {
                     : "bg-transparent py-6"
                     } text-white`}
             >
-                <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+                <div className="max-w-7xl mx-auto px-4 md:px-6 flex justify-between items-center">
                     <Link href="/" className="font-cronde text-2xl tracking-wider z-50 relative">
                         SACRÉ
                     </Link>
 
                     {/* Desktop Menu */}
-                    <div className="hidden md:flex space-x-12 text-sm tracking-[0.15em] uppercase font-light">
+                    <div className="hidden md:flex items-center space-x-8 lg:space-x-12 text-sm tracking-[0.15em] uppercase font-light">
                         <Link href="/" className="hover:opacity-70 transition-opacity">
                             Inicio
                         </Link>
@@ -55,6 +58,20 @@ export default function Navbar() {
                         <Link href="/contacto" className="hover:opacity-70 transition-opacity">
                             Contacto
                         </Link>
+                        
+                        {/* Cart Button */}
+                        <button 
+                            onClick={toggleCart}
+                            className="relative hover:opacity-70 transition-opacity"
+                            aria-label="Abrir carrito"
+                        >
+                            <ShoppingBag size={20} />
+                            {itemCount > 0 && (
+                                <span className="absolute -top-2 -right-2 bg-antique-gold text-black text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
+                                    {itemCount}
+                                </span>
+                            )}
+                        </button>
                     </div>
 
                     {/* Mobile Menu Toggle */}
@@ -106,6 +123,23 @@ export default function Navbar() {
                         >
                             Contacto
                         </Link>
+                        
+                        {/* Cart in mobile */}
+                        <button 
+                            onClick={() => {
+                                setIsOpen(false);
+                                toggleCart();
+                            }}
+                            className="font-cronde text-4xl text-antique-gold hover:text-white/70 transition-colors flex items-center justify-center gap-3"
+                        >
+                            <ShoppingBag size={32} />
+                            Carrito
+                            {itemCount > 0 && (
+                                <span className="bg-antique-gold text-black text-sm w-8 h-8 rounded-full flex items-center justify-center font-bold">
+                                    {itemCount}
+                                </span>
+                            )}
+                        </button>
                     </div>
                 </div>
             )}

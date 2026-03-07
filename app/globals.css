@@ -1,6 +1,25 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* stylelint-disable */
+@import "tailwindcss";
+
+@theme {
+  /* Custom Fonts */
+  --font-cronde: var(--font-cronde);
+  --font-sans: var(--font-montserrat);
+  
+  /* Custom Colors */
+  --color-black: #050505;
+  --color-white: #FFFFFF;
+  
+  /* Custom Brand Colors */
+  --color-antique-gold: #d4a853;
+  --color-cream-accent: #f5f0e6;
+  --color-chocolate-noir: #1a1a1a;
+  
+  /* Stone palette for dark theme */
+  --color-stone-950: #0c0a09;
+  --color-stone-900: #1c1917;
+  --color-stone-800: #292524;
+}
 
 :root {
   --foreground-rgb: 231, 229, 228;

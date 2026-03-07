@@ -89,8 +89,8 @@ export default function ElChocolate() {
                             { num: "03", title: "Molienda", desc: "La transformación en licor puro." },
                             { num: "04", title: "Conchado", desc: "72 horas de refinamiento absoluto." },
                             { num: "05", title: "Temperado", desc: "El brillo del cristal perfecto." },
-                        ].map((step, i) => (
-                            <div key={i} className="group relative h-[400px] border border-white/5 bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-700 p-8 flex flex-col justify-between overflow-hidden">
+                        ].map((step) => (
+                            <div key={`timeline-${step.title.toLowerCase().replaceAll(' ', '-')}`} className="group relative h-[400px] border border-white/5 bg-white/5 backdrop-blur-sm hover:bg-white/10 transition-all duration-700 p-8 flex flex-col justify-between overflow-hidden">
                                 <div className="absolute top-0 right-0 p-4 opacity-20 font-cronde text-6xl group-hover:scale-150 group-hover:opacity-10 transition-all duration-1000">
                                     {step.num}
                                 </div>
