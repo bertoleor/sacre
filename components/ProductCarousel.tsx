@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import { Plus, Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { products } from "@/lib/data";
 import Link from "next/link";
@@ -18,6 +18,8 @@ export default function ProductCarousel({
     showNavigation = true
 }: ProductCarouselProps) {
     const scrollRef = useRef<HTMLDivElement>(null);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [isPaused, setIsPaused] = useState(false);
     
     const filteredProducts = category
         ? products.filter(p => p.category === category)
@@ -25,16 +27,55 @@ export default function ProductCarousel({
 
     const scroll = (direction: "left" | "right") => {
         if (scrollRef.current) {
-            const scrollAmount = 400;
+            const containerWidth = scrollRef.current.clientWidth;
+            const scrollAmount = containerWidth;
             scrollRef.current.scrollBy({
                 left: direction === "left" ? -scrollAmount : scrollAmount,
                 behavior: "smooth"
             });
+            
+            // Update current index
+            if (direction === "left" && currentIndex > 0) {
+                setCurrentIndex(currentIndex - 1);
+            } else if (direction === "right" && currentIndex < filteredProducts.length - 1) {
+                setCurrentIndex(currentIndex + 1);
+            }
         }
     };
 
+    // Auto-scroll effect
+    useEffect(() => {
+        if (isPaused) return;
+        
+        const interval = setInterval(() => {
+            if (scrollRef.current) {
+                const containerWidth = scrollRef.current.clientWidth;
+                const maxScroll = scrollRef.current.scrollWidth - containerWidth;
+                const currentScroll = scrollRef.current.scrollLeft;
+                
+                if (currentScroll >= maxScroll - 10) {
+                    // Reset to start
+                    scrollRef.current.scrollTo({ left: 0, behavior: "smooth" });
+                    setCurrentIndex(0);
+                } else {
+                    scrollRef.current.scrollBy({ left: containerWidth, behavior: "smooth" });
+                    setCurrentIndex(prev => Math.min(prev + 1, filteredProducts.length - 1));
+                }
+            }
+        }, 4000); // 4 seconds auto-scroll
+
+        return () => clearInterval(interval);
+    }, [isPaused, filteredProducts.length]);
+
+    // Card width - 1 card at a time on all screens
+    const cardWidth = "w-[85vw] md:w-[600px] lg:w-[700px]";
+
     return (
-        <section className="relative py-24 bg-[#050505]">
+        <section 
+            className="relative py-24 bg-[#050505]"
+            onMouseEnter={() => setIsPaused(true)}
+            onMouseLeave={() => setIsPaused(false)}
+        >
             {/* Section Header */}
             <div className="container mx-auto px-6 mb-12">
                 <div className="flex items-center justify-between">
@@ -75,14 +116,14 @@ export default function ProductCarousel({
                 {/* Scrollable container */}
                 <div
                     ref={scrollRef}
-                    className="flex gap-6 overflow-x-auto scrollbar-hide px-6 pb-4 items-stretch"
+                    className="flex gap-6 overflow-x-auto scrollbar-hide px-6 pb-4 items-stretch snap-x snap-mandatory"
                     style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
                 >
                     {filteredProducts.map((product, index) => (
                         <Link
                             key={product.id}
                             href={`/productos/${product.id}`}
-                            className="flex-shrink-0 w-[85vw] md:w-[400px] lg:w-[350px] group"
+                            className={`flex-shrink-0 ${cardWidth} group snap-center`}
                         >
                             <GlassCard className="h-full flex flex-col">
                                 {/* Featured Badge */}
@@ -94,26 +135,26 @@ export default function ProductCarousel({
                                 )}
                                 
                                 {/* Product Image */}
-                                <div className="aspect-square mb-4 overflow-hidden flex-shrink-0">
+                                <div className="aspect-square mb-6 overflow-hidden flex-shrink-0">
                                     <div 
                                         className="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
                                         style={{ backgroundImage: `url(${product.image})` }}
                                     />
                                 </div>
 
-                                {/* Product Info - Fixed height area */}
-                                <div className="flex-1 flex flex-col justify-end p-6 pt-0 min-h-[180px]">
+                                {/* Product Info - Fixed height area - Same as ProductGrid */}
+                                <div className="flex-1 flex flex-col justify-end p-6 pt-0 min-h-[200px] text-center">
                                     <h3 className="text-xl font-cronde text-cream-accent group-hover:text-burgundy transition-colors mb-2">
                                         {product.name}
                                     </h3>
                                     <p className="text-stone-400 text-sm font-light line-clamp-2 mb-4">
                                         {product.description}
                                     </p>
-                                    <p className="text-burgundy font-medium tracking-wide text-lg mb-4">
+                                    <p className="text-burgundy font-medium tracking-wide text-lg">
                                         $ {product.price.toLocaleString("es-AR")}
                                     </p>
 
-                                    <div className="w-full py-3 border border-white/10 text-stone-300 text-xs uppercase tracking-widest group-hover:bg-burgundy group-hover:text-black group-hover:border-burgundy transition-all duration-300 flex items-center justify-center gap-2">
+                                    <div className="w-full mt-4 py-3 border border-white/10 text-stone-300 text-xs uppercase tracking-widest group-hover:bg-burgundy group-hover:text-black group-hover:border-burgundy transition-all duration-300 flex items-center justify-center gap-2">
                                         <Plus className="w-4 h-4" />
                                         Ver Detalle
                                     </div>

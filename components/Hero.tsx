@@ -45,6 +45,9 @@ export default function Hero() {
                     Descubrir Colección
                 </Link>
             </div>
+            
+            {/* Bottom gradient - smooth fade to next section */}
+            <div className="absolute bottom-0 left-0 w-full h-40 bg-gradient-to-t from-[#050505] via-[#050505]/50 to-transparent z-30" />
         </section>
     );
 }

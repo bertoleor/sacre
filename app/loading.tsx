@@ -1,4 +1,4 @@
-import { HeroSkeleton } from "@/components/Skeleton";
+import { HeroSkeleton, CarouselSkeleton } from "@/components/Skeleton";
 
 export default function Loading() {
     return (
@@ -17,6 +17,9 @@ export default function Loading() {
                     <div className="h-[400px] md:h-full rounded-[2.5rem] bg-white/5 animate-pulse" />
                 </div>
             </section>
+
+            {/* Carousel Skeleton */}
+            <CarouselSkeleton />
 
             {/* Immersive Teaser Section Skeleton */}
             <section className="relative h-screen w-full flex items-center justify-center">

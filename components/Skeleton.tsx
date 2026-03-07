@@ -152,3 +152,30 @@ export function TimelineSkeleton() {
         </div>
     );
 }
+
+// Carousel Skeleton
+export function CarouselSkeleton() {
+    return (
+        <div className="py-24 bg-[#050505]">
+            <div className="container mx-auto px-6 mb-12">
+                <Skeleton className="w-48 h-10 mb-2" variant="text" />
+                <Skeleton className="w-24 h-px" />
+            </div>
+            <div className="flex gap-6 px-6 overflow-x-auto">
+                {[0, 1, 2].map((idx) => (
+                    <div key={`carousel-skeleton-${idx}`} className="flex-shrink-0 w-[85vw] md:w-[600px] lg:w-[700px]">
+                        <div className="bg-white/5 border border-white/10 rounded-3xl overflow-hidden h-full">
+                            <Skeleton className="aspect-square mb-6" />
+                            <div className="p-6 pt-0 min-h-[200px]">
+                                <Skeleton className="w-3/4 h-6 mx-auto mb-2" variant="text" />
+                                <Skeleton className="w-full h-4 mx-auto mb-2" variant="text" />
+                                <Skeleton className="w-1/2 h-6 mx-auto mb-4" variant="text" />
+                                <Skeleton className="w-full h-10" />
+                            </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}
