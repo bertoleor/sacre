@@ -14,10 +14,10 @@ export default function ProductGrid({ category }: { category?: string }) {
             <div className="container mx-auto px-6">
                 <FadeIn direction="up" duration={0.8}>
                     <div className="text-center mb-16">
-                        <h2 className="text-3xl md:text-4xl font-cronde text-antique-gold mb-4">
+                        <h2 className="text-3xl md:text-4xl font-cronde text-burgundy mb-4">
                             {category ? `Colección ${category.charAt(0).toUpperCase() + category.slice(1)}` : "Colección Exclusiva"}
                         </h2>
-                        <div className="w-24 h-px bg-antique-gold/30 mx-auto" />
+                        <div className="w-24 h-px bg-burgundy/30 mx-auto" />
                     </div>
                 </FadeIn>
 
@@ -31,9 +31,9 @@ export default function ProductGrid({ category }: { category?: string }) {
                                 <GlassCard>
                                     {/* Featured Badge */}
                                     {product.featured && (
-                                        <div className="absolute top-4 right-4 z-20 bg-antique-gold/20 backdrop-blur-sm px-3 py-1 rounded-full flex items-center gap-1">
-                                            <Star className="w-3 h-3 text-antique-gold fill-antique-gold" />
-                                            <span className="text-xs text-antique-gold uppercase tracking-wider">Destacado</span>
+                                        <div className="absolute top-4 right-4 z-20 bg-burgundy/20 backdrop-blur-sm px-3 py-1 rounded-full flex items-center gap-1">
+                                            <Star className="w-3 h-3 text-burgundy fill-burgundy" />
+                                            <span className="text-xs text-burgundy uppercase tracking-wider">Destacado</span>
                                         </div>
                                     )}
                                     
@@ -45,17 +45,17 @@ export default function ProductGrid({ category }: { category?: string }) {
                                     </div>
 
                                     <div className="p-6 pt-0 space-y-4 text-center">
-                                        <h3 className="text-xl font-cronde text-cream-accent group-hover:text-antique-gold transition-colors">
+                                        <h3 className="text-xl font-cronde text-cream-accent group-hover:text-burgundy transition-colors">
                                             {product.name}
                                         </h3>
                                         <p className="text-stone-400 text-sm font-light leading-relaxed">
                                             {product.description}
                                         </p>
-                                        <p className="text-antique-gold font-medium tracking-wide pt-2 text-lg">
+                                        <p className="text-burgundy font-medium tracking-wide pt-2 text-lg">
                                             $ {product.price.toLocaleString("es-AR")}
                                         </p>
 
-                                        <div className="w-full mt-6 py-3 border border-white/10 text-stone-300 text-xs uppercase tracking-widest group-hover:bg-antique-gold group-hover:text-black group-hover:border-antique-gold transition-all duration-300 flex items-center justify-center gap-2">
+                                        <div className="w-full mt-6 py-3 border border-white/10 text-stone-300 text-xs uppercase tracking-widest group-hover:bg-burgundy group-hover:text-black group-hover:border-burgundy transition-all duration-300 flex items-center justify-center gap-2">
                                             <Plus className="w-4 h-4" />
                                             Ver Detalle
                                         </div>

@@ -16,7 +16,7 @@ export default function AddToCartButton({ product }: Readonly<{ product: Product
     return (
         <button 
             onClick={() => addItem(productWithStringId)}
-            className="flex-1 bg-antique-gold text-black px-8 py-3 rounded-full uppercase tracking-widest text-xs hover:bg-white transition-colors flex items-center justify-center gap-3"
+            className="flex-1 bg-burgundy text-black px-8 py-3 rounded-full uppercase tracking-widest text-xs hover:bg-white transition-colors flex items-center justify-center gap-3"
         >
             <ShoppingBag size={18} />
             Añadir al Carrito

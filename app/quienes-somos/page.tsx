@@ -1,8 +1,12 @@
 import Image from "next/image";
+import SectionDivider from "@/components/SectionDivider";
 
 export default function QuienesSomos() {
     return (
-        <section className="relative min-h-screen w-full flex items-center justify-center">
+        <main className="bg-[#050505] min-h-screen">
+            <SectionDivider variant="bottom" height="h-32" />
+            
+            <section className="relative min-h-screen w-full flex items-center justify-center">
             {/* 1. LA IMAGEN VA AQUÍ, COMO FONDO ABSOLUTO */}
             <Image
                 src="/images/bombones.png"
@@ -34,5 +38,8 @@ export default function QuienesSomos() {
                 </div>
             </div>
         </section>
+        
+        <SectionDivider variant="top" height="h-32" />
+        </main>
     );
 }

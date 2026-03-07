@@ -67,7 +67,7 @@ export default function Navbar() {
                         >
                             <ShoppingBag size={20} />
                             {itemCount > 0 && (
-                                <span className="absolute -top-2 -right-2 bg-antique-gold text-black text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
+                                <span className="absolute -top-2 -right-2 bg-burgundy text-black text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold">
                                     {itemCount}
                                 </span>
                             )}
@@ -130,12 +130,12 @@ export default function Navbar() {
                                 setIsOpen(false);
                                 toggleCart();
                             }}
-                            className="font-cronde text-4xl text-antique-gold hover:text-white/70 transition-colors flex items-center justify-center gap-3"
+                            className="font-cronde text-4xl text-burgundy hover:text-white/70 transition-colors flex items-center justify-center gap-3"
                         >
                             <ShoppingBag size={32} />
                             Carrito
                             {itemCount > 0 && (
-                                <span className="bg-antique-gold text-black text-sm w-8 h-8 rounded-full flex items-center justify-center font-bold">
+                                <span className="bg-burgundy text-black text-sm w-8 h-8 rounded-full flex items-center justify-center font-bold">
                                     {itemCount}
                                 </span>
                             )}

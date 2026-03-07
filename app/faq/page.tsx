@@ -1,7 +1,11 @@
+import SectionDivider from "@/components/SectionDivider";
+
 export default function FAQ() {
     return (
-        <main className="pt-32 pb-20 px-6 min-h-screen">
-            <div className="max-w-3xl mx-auto">
+        <main className="pt-32 min-h-screen">
+            <SectionDivider variant="bottom" height="h-16" />
+            
+            <div className="px-6 pb-20 max-w-3xl mx-auto">
                 <h1 className="font-cronde text-5xl md:text-7xl mb-16 text-center">Preguntas frecuentes</h1>
 
                 <div className="space-y-12">
@@ -27,6 +31,8 @@ export default function FAQ() {
                     </div>
                 </div>
             </div>
+            
+            <SectionDivider variant="top" height="h-16" />
         </main>
     );
 }

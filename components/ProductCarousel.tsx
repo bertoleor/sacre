@@ -39,24 +39,24 @@ export default function ProductCarousel({
             <div className="container mx-auto px-6 mb-12">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h2 className="text-3xl md:text-4xl font-cronde text-antique-gold mb-2">
+                        <h2 className="text-3xl md:text-4xl font-cronde text-burgundy mb-2">
                             {title}
                         </h2>
-                        <div className="w-24 h-px bg-antique-gold/30" />
+                        <div className="w-24 h-px bg-burgundy/30" />
                     </div>
                     
                     {showNavigation && (
                         <div className="flex gap-2">
                             <button
                                 onClick={() => scroll("left")}
-                                className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white/60 hover:text-antique-gold hover:border-antique-gold/50 transition-all duration-300"
+                                className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white/60 hover:text-burgundy hover:border-burgundy/50 transition-all duration-300"
                                 aria-label="Deslizar a la izquierda"
                             >
                                 <ChevronLeft className="w-5 h-5" />
                             </button>
                             <button
                                 onClick={() => scroll("right")}
-                                className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white/60 hover:text-antique-gold hover:border-antique-gold/50 transition-all duration-300"
+                                className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white/60 hover:text-burgundy hover:border-burgundy/50 transition-all duration-300"
                                 aria-label="Deslizar a la derecha"
                             >
                                 <ChevronRight className="w-5 h-5" />
@@ -87,9 +87,9 @@ export default function ProductCarousel({
                             <GlassCard className="h-full">
                                 {/* Featured Badge */}
                                 {product.featured && (
-                                    <div className="absolute top-4 right-4 z-20 bg-antique-gold/20 backdrop-blur-sm px-3 py-1 rounded-full flex items-center gap-1">
-                                        <Star className="w-3 h-3 text-antique-gold fill-antique-gold" />
-                                        <span className="text-xs text-antique-gold uppercase tracking-wider">Destacado</span>
+                                    <div className="absolute top-4 right-4 z-20 bg-burgundy/20 backdrop-blur-sm px-3 py-1 rounded-full flex items-center gap-1">
+                                        <Star className="w-3 h-3 text-burgundy fill-burgundy" />
+                                        <span className="text-xs text-burgundy uppercase tracking-wider">Destacado</span>
                                     </div>
                                 )}
                                 
@@ -103,17 +103,17 @@ export default function ProductCarousel({
 
                                 {/* Product Info */}
                                 <div className="p-6 pt-0 space-y-3">
-                                    <h3 className="text-xl font-cronde text-cream-accent group-hover:text-antique-gold transition-colors">
+                                    <h3 className="text-xl font-cronde text-cream-accent group-hover:text-burgundy transition-colors">
                                         {product.name}
                                     </h3>
                                     <p className="text-stone-400 text-sm font-light line-clamp-2">
                                         {product.description}
                                     </p>
-                                    <p className="text-antique-gold font-medium tracking-wide text-lg">
+                                    <p className="text-burgundy font-medium tracking-wide text-lg">
                                         $ {product.price.toLocaleString("es-AR")}
                                     </p>
 
-                                    <div className="w-full mt-4 py-3 border border-white/10 text-stone-300 text-xs uppercase tracking-widest group-hover:bg-antique-gold group-hover:text-black group-hover:border-antique-gold transition-all duration-300 flex items-center justify-center gap-2">
+                                    <div className="w-full mt-4 py-3 border border-white/10 text-stone-300 text-xs uppercase tracking-widest group-hover:bg-burgundy group-hover:text-black group-hover:border-burgundy transition-all duration-300 flex items-center justify-center gap-2">
                                         <Plus className="w-4 h-4" />
                                         Ver Detalle
                                     </div>

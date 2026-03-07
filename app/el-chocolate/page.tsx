@@ -1,4 +1,5 @@
 import Image from "next/image";
+import SectionDivider from "@/components/SectionDivider";
 
 export default function ElChocolate() {
     return (
@@ -32,6 +33,9 @@ export default function ElChocolate() {
                     </p>
                 </div>
             </section>
+
+            {/* Gradient Divider */}
+            <SectionDivider variant="both" height="h-24" />
 
             {/* 2. Central Narrative - The Axis */}
             <section className="relative py-40 px-6">
@@ -72,6 +76,9 @@ export default function ElChocolate() {
                 </div>
             </section>
 
+            {/* Gradient Divider */}
+            <SectionDivider variant="both" height="h-24" />
+
             {/* 3. Cinematic Timeline - Glassmorphism */}
             <section className="relative py-40 w-full overflow-hidden">
                 {/* Background Video/Texture Placeholder */}
@@ -106,6 +113,9 @@ export default function ElChocolate() {
                     </div>
                 </div>
             </section>
+
+            {/* Gradient Divider */}
+            <SectionDivider variant="both" height="h-24" />
 
             {/* 4. Closing Statement */}
             <section className="h-[50vh] flex items-center justify-center text-center px-6">

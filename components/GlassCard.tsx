@@ -26,7 +26,7 @@ export default function GlassCard({
                 rounded-3xl
                 overflow-hidden
                 transition-all duration-500
-                ${hoverEffect ? "hover:bg-white/10 hover:border-antique-gold/30 hover:shadow-lg hover:shadow-antique-gold/10" : ""}
+                ${hoverEffect ? "hover:bg-white/10 hover:border-burgundy/30 hover:shadow-lg hover:shadow-burgundy/10" : ""}
                 ${onClick ? "cursor-pointer" : ""}
                 ${className}
             `}

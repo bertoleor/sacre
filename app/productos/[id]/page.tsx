@@ -82,7 +82,7 @@ export default async function ProductDetailPage({ params }: Readonly<PageProps>)
                         </h1>
 
                         {/* Price */}
-                        <div className="text-2xl text-antique-gold">
+                        <div className="text-2xl text-burgundy">
                             $ {product.price.toLocaleString("es-AR")}
                         </div>
 
@@ -92,7 +92,7 @@ export default async function ProductDetailPage({ params }: Readonly<PageProps>)
                                 <Star 
                                     key={`star-${starIndex}`} 
                                     size={16} 
-                                    className="text-antique-gold fill-antique-gold" 
+                                    className="text-burgundy fill-burgundy" 
                                 />
                             ))}
                             <span className="text-white/40 text-sm ml-2">(12 reseñas)</span>
@@ -128,7 +128,7 @@ export default async function ProductDetailPage({ params }: Readonly<PageProps>)
                                     <button className="text-white/60 hover:text-white px-3">+</button>
                                 </div>
                                 <AddToCartButton product={product} />
-                                <button className="border border-white/20 p-3 rounded-full hover:border-antique-gold hover:text-antique-gold transition-colors">
+                                <button className="border border-white/20 p-3 rounded-full hover:border-burgundy hover:text-burgundy transition-colors">
                                     <Heart size={20} />
                                 </button>
                             </div>
@@ -173,7 +173,7 @@ export default async function ProductDetailPage({ params }: Readonly<PageProps>)
                                         />
                                     </div>
                                     <h3 className="font-cronde text-xl mb-1">{relatedProduct.name}</h3>
-                                    <p className="text-antique-gold">
+                                    <p className="text-burgundy">
                                         $ {relatedProduct.price.toLocaleString("es-AR")}
                                     </p>
                                 </Link>

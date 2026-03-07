@@ -106,7 +106,7 @@ export default function CheckoutPage() {
         <div className="text-center">
           <ShoppingBag size={64} className="mx-auto mb-4 text-white/20" />
           <h1 className="font-cronde text-3xl mb-4">Tu carrito está vacío</h1>
-          <Link href="/productos" className="inline-block px-8 py-3 bg-antique-gold text-black rounded-full uppercase tracking-widest text-xs">
+          <Link href="/productos" className="inline-block px-8 py-3 bg-burgundy text-black rounded-full uppercase tracking-widest text-xs">
             Ver Productos
           </Link>
         </div>
@@ -118,12 +118,12 @@ export default function CheckoutPage() {
     return (
       <main className="min-h-screen bg-[#050505] flex items-center justify-center px-6 py-20">
         <div className="max-w-xl mx-auto text-center">
-          <div className="w-20 h-20 bg-antique-gold/20 rounded-full flex items-center justify-center mx-auto mb-6">
-            <Check className="text-antique-gold" size={40} />
+          <div className="w-20 h-20 bg-burgundy/20 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Check className="text-burgundy" size={40} />
           </div>
           <h1 className="font-cronde text-4xl mb-4">¡Pedido Confirmado!</h1>
           <p className="text-white/60 mb-2">Tu número de pedido es:</p>
-          <p className="font-cronde text-2xl text-antique-gold mb-8">{state.orderId}</p>
+          <p className="font-cronde text-2xl text-burgundy mb-8">{state.orderId}</p>
           <Link href="/productos" className="inline-block px-8 py-3 border border-white/20 rounded-full uppercase tracking-widest text-xs hover:bg-white hover:text-black">
             Volver a la Tienda
           </Link>
@@ -147,12 +147,12 @@ export default function CheckoutPage() {
           {(["customer", "shipping", "payment"] as CheckoutStep[]).map((step, idx) => {
               const currentStepIndex = ["customer", "shipping", "payment"].indexOf(state.step);
               const getStepStyle = (stepName: string, index: number) => {
-                if (state.step === stepName) return "bg-antique-gold text-black";
+                if (state.step === stepName) return "bg-burgundy text-black";
                 if (currentStepIndex > index) return "bg-white/20";
                 return "bg-white/5 text-white/40";
               };
               const getLineStyle = (index: number) => {
-                if (currentStepIndex > index) return "bg-antique-gold";
+                if (currentStepIndex > index) return "bg-burgundy";
                 return "bg-white/10";
               };
               return (
@@ -177,23 +177,23 @@ export default function CheckoutPage() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <label htmlFor="firstName" className="text-xs uppercase tracking-widest text-white/50">Nombre</label>
-                      <input id="firstName" type="text" value={state.customer.firstName} onChange={e => setState(prev => ({ ...prev, customer: { ...prev.customer, firstName: e.target.value } }))} className="w-full bg-transparent border border-white/20 rounded-lg px-4 py-3 focus:border-antique-gold outline-none" placeholder="Tu nombre" />
+                      <input id="firstName" type="text" value={state.customer.firstName} onChange={e => setState(prev => ({ ...prev, customer: { ...prev.customer, firstName: e.target.value } }))} className="w-full bg-transparent border border-white/20 rounded-lg px-4 py-3 focus:border-burgundy outline-none" placeholder="Tu nombre" />
                     </div>
                     <div className="space-y-2">
                       <label htmlFor="lastName" className="text-xs uppercase tracking-widest text-white/50">Apellido</label>
-                      <input id="lastName" type="text" value={state.customer.lastName} onChange={e => setState(prev => ({ ...prev, customer: { ...prev.customer, lastName: e.target.value } }))} className="w-full bg-transparent border border-white/20 rounded-lg px-4 py-3 focus:border-antique-gold outline-none" placeholder="Tu apellido" />
+                      <input id="lastName" type="text" value={state.customer.lastName} onChange={e => setState(prev => ({ ...prev, customer: { ...prev.customer, lastName: e.target.value } }))} className="w-full bg-transparent border border-white/20 rounded-lg px-4 py-3 focus:border-burgundy outline-none" placeholder="Tu apellido" />
                     </div>
                     <div className="space-y-2">
                       <label htmlFor="email" className="text-xs uppercase tracking-widest text-white/50">Email</label>
-                      <input id="email" type="email" value={state.customer.email} onChange={e => setState(prev => ({ ...prev, customer: { ...prev.customer, email: e.target.value } }))} className="w-full bg-transparent border border-white/20 rounded-lg px-4 py-3 focus:border-antique-gold outline-none" placeholder="tu@email.com" />
+                      <input id="email" type="email" value={state.customer.email} onChange={e => setState(prev => ({ ...prev, customer: { ...prev.customer, email: e.target.value } }))} className="w-full bg-transparent border border-white/20 rounded-lg px-4 py-3 focus:border-burgundy outline-none" placeholder="tu@email.com" />
                     </div>
                     <div className="space-y-2">
                       <label htmlFor="phone" className="text-xs uppercase tracking-widest text-white/50">Teléfono</label>
-                      <input id="phone" type="tel" value={state.customer.phone} onChange={e => setState(prev => ({ ...prev, customer: { ...prev.customer, phone: e.target.value } }))} className="w-full bg-transparent border border-white/20 rounded-lg px-4 py-3 focus:border-antique-gold outline-none" placeholder="11 1234 5678" />
+                      <input id="phone" type="tel" value={state.customer.phone} onChange={e => setState(prev => ({ ...prev, customer: { ...prev.customer, phone: e.target.value } }))} className="w-full bg-transparent border border-white/20 rounded-lg px-4 py-3 focus:border-burgundy outline-none" placeholder="11 1234 5678" />
                     </div>
                   </div>
                 </div>
-                <button onClick={handleCustomerSubmit} disabled={!isCustomerValid()} className="w-full bg-antique-gold text-black py-4 rounded-full uppercase tracking-widest text-xs hover:bg-white disabled:opacity-50 flex items-center justify-center gap-2">
+                <button onClick={handleCustomerSubmit} disabled={!isCustomerValid()} className="w-full bg-burgundy text-black py-4 rounded-full uppercase tracking-widest text-xs hover:bg-white disabled:opacity-50 flex items-center justify-center gap-2">
                   Continuar <ArrowRight size={16} />
                 </button>
               </div>
@@ -204,13 +204,13 @@ export default function CheckoutPage() {
                 <div className="bg-white/5 border border-white/10 rounded-[2rem] p-8">
                   <h2 className="font-cronde text-2xl mb-6">2. Método de Entrega</h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                    <button onClick={() => setState(prev => ({ ...prev, shipping: { ...prev.shipping, method: "delivery" } }))} className={`p-6 rounded-xl border text-left ${state.shipping.method === "delivery" ? "border-antique-gold bg-antique-gold/10" : "border-white/10"}`}>
-                      <Truck className={`mb-3 ${state.shipping.method === "delivery" ? "text-antique-gold" : "text-white/40"}`} />
+                    <button onClick={() => setState(prev => ({ ...prev, shipping: { ...prev.shipping, method: "delivery" } }))} className={`p-6 rounded-xl border text-left ${state.shipping.method === "delivery" ? "border-burgundy bg-burgundy/10" : "border-white/10"}`}>
+                      <Truck className={`mb-3 ${state.shipping.method === "delivery" ? "text-burgundy" : "text-white/40"}`} />
                       <h3 className="font-medium mb-1">Envío a Domicilio</h3>
                       <p className="text-xs text-white/40">Entrega en 3-5 días</p>
                     </button>
-                    <button onClick={() => setState(prev => ({ ...prev, shipping: { ...prev.shipping, method: "pickup" } }))} className={`p-6 rounded-xl border text-left ${state.shipping.method === "pickup" ? "border-antique-gold bg-antique-gold/10" : "border-white/10"}`}>
-                      <Store className={`mb-3 ${state.shipping.method === "pickup" ? "text-antique-gold" : "text-white/40"}`} />
+                    <button onClick={() => setState(prev => ({ ...prev, shipping: { ...prev.shipping, method: "pickup" } }))} className={`p-6 rounded-xl border text-left ${state.shipping.method === "pickup" ? "border-burgundy bg-burgundy/10" : "border-white/10"}`}>
+                      <Store className={`mb-3 ${state.shipping.method === "pickup" ? "text-burgundy" : "text-white/40"}`} />
                       <h3 className="font-medium mb-1">Retiro en Local</h3>
                       <p className="text-xs text-white/40">Palermo, Buenos Aires</p>
                     </button>
@@ -219,26 +219,26 @@ export default function CheckoutPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="md:col-span-2 space-y-2">
                         <label htmlFor="address" className="text-xs uppercase tracking-widest text-white/50">Dirección</label>
-                        <input id="address" type="text" value={state.shipping.addressLine1} onChange={e => setState(prev => ({ ...prev, shipping: { ...prev.shipping, addressLine1: e.target.value } }))} className="w-full bg-transparent border border-white/20 rounded-lg px-4 py-3 focus:border-antique-gold outline-none" placeholder="Calle y número" />
+                        <input id="address" type="text" value={state.shipping.addressLine1} onChange={e => setState(prev => ({ ...prev, shipping: { ...prev.shipping, addressLine1: e.target.value } }))} className="w-full bg-transparent border border-white/20 rounded-lg px-4 py-3 focus:border-burgundy outline-none" placeholder="Calle y número" />
                       </div>
                       <div className="space-y-2">
                         <label htmlFor="city" className="text-xs uppercase tracking-widest text-white/50">Ciudad</label>
-                        <input id="city" type="text" value={state.shipping.city} onChange={e => setState(prev => ({ ...prev, shipping: { ...prev.shipping, city: e.target.value } }))} className="w-full bg-transparent border border-white/20 rounded-lg px-4 py-3 focus:border-antique-gold outline-none" placeholder="Ciudad" />
+                        <input id="city" type="text" value={state.shipping.city} onChange={e => setState(prev => ({ ...prev, shipping: { ...prev.shipping, city: e.target.value } }))} className="w-full bg-transparent border border-white/20 rounded-lg px-4 py-3 focus:border-burgundy outline-none" placeholder="Ciudad" />
                       </div>
                       <div className="space-y-2">
                         <label htmlFor="state" className="text-xs uppercase tracking-widest text-white/50">Provincia</label>
-                        <input id="state" type="text" value={state.shipping.state} onChange={e => setState(prev => ({ ...prev, shipping: { ...prev.shipping, state: e.target.value } }))} className="w-full bg-transparent border border-white/20 rounded-lg px-4 py-3 focus:border-antique-gold outline-none" placeholder="Provincia" />
+                        <input id="state" type="text" value={state.shipping.state} onChange={e => setState(prev => ({ ...prev, shipping: { ...prev.shipping, state: e.target.value } }))} className="w-full bg-transparent border border-white/20 rounded-lg px-4 py-3 focus:border-burgundy outline-none" placeholder="Provincia" />
                       </div>
                       <div className="space-y-2">
                         <label htmlFor="postalCode" className="text-xs uppercase tracking-widest text-white/50">Código Postal</label>
-                        <input id="postalCode" type="text" value={state.shipping.postalCode} onChange={e => setState(prev => ({ ...prev, shipping: { ...prev.shipping, postalCode: e.target.value } }))} className="w-full bg-transparent border border-white/20 rounded-lg px-4 py-3 focus:border-antique-gold outline-none" placeholder="CP" />
+                        <input id="postalCode" type="text" value={state.shipping.postalCode} onChange={e => setState(prev => ({ ...prev, shipping: { ...prev.shipping, postalCode: e.target.value } }))} className="w-full bg-transparent border border-white/20 rounded-lg px-4 py-3 focus:border-burgundy outline-none" placeholder="CP" />
                       </div>
                     </div>
                   )}
                   {state.shipping.method === "pickup" && (
-                    <div className="bg-antique-gold/10 border border-antique-gold/30 rounded-xl p-6">
+                    <div className="bg-burgundy/10 border border-burgundy/30 rounded-xl p-6">
                       <div className="flex items-start gap-4">
-                        <MapPin className="text-antique-gold mt-1" size={24} />
+                        <MapPin className="text-burgundy mt-1" size={24} />
                         <div>
                           <h3 className="font-medium mb-2">SACRÉ Atelier</h3>
                           <p className="text-sm text-white/60">Jorge Luis Borges 2100, Palermo<br />Buenos Aires, Argentina</p>
@@ -249,7 +249,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="flex gap-4">
                   <button onClick={goBack} className="px-8 py-3 border border-white/20 rounded-full uppercase tracking-widest text-xs">Volver</button>
-                  <button onClick={handleShippingSubmit} disabled={!isShippingValid()} className="flex-1 bg-antique-gold text-black py-4 rounded-full uppercase tracking-widest text-xs disabled:opacity-50 flex items-center justify-center gap-2">
+                  <button onClick={handleShippingSubmit} disabled={!isShippingValid()} className="flex-1 bg-burgundy text-black py-4 rounded-full uppercase tracking-widest text-xs disabled:opacity-50 flex items-center justify-center gap-2">
                     Continuar <ArrowRight size={16} />
                   </button>
                 </div>
@@ -267,17 +267,17 @@ export default function CheckoutPage() {
                       { id: "card_debit", icon: CreditCard, label: "Débito", desc: "Visa Débito, Maestro" },
                       { id: "card_credit", icon: CreditCard, label: "Crédito", desc: "Visa, Mastercard - Hasta 12 cuotas" },
                     ].map(pm => (
-                      <button key={pm.id} onClick={() => setState(prev => ({ ...prev, paymentMethod: pm.id as any }))} className={`w-full p-6 rounded-xl border text-left flex items-center gap-4 ${state.paymentMethod === pm.id ? "border-antique-gold bg-antique-gold/10" : "border-white/10"}`}>
-                        <pm.icon className={state.paymentMethod === pm.id ? "text-antique-gold" : "text-white/40"} />
+                      <button key={pm.id} onClick={() => setState(prev => ({ ...prev, paymentMethod: pm.id as any }))} className={`w-full p-6 rounded-xl border text-left flex items-center gap-4 ${state.paymentMethod === pm.id ? "border-burgundy bg-burgundy/10" : "border-white/10"}`}>
+                        <pm.icon className={state.paymentMethod === pm.id ? "text-burgundy" : "text-white/40"} />
                         <div><h3 className="font-medium mb-1">{pm.label}</h3><p className="text-xs text-white/40">{pm.desc}</p></div>
-                        {state.paymentMethod === pm.id && <Check className="ml-auto text-antique-gold" size={20} />}
+                        {state.paymentMethod === pm.id && <Check className="ml-auto text-burgundy" size={20} />}
                       </button>
                     ))}
                   </div>
                 </div>
                 <div className="flex gap-4">
                   <button onClick={goBack} disabled={state.isProcessing} className="px-8 py-3 border border-white/20 rounded-full uppercase tracking-widest text-xs">Volver</button>
-                  <button onClick={handlePaymentSubmit} disabled={!isPaymentValid() || state.isProcessing} className="flex-1 bg-antique-gold text-black py-4 rounded-full uppercase tracking-widest text-xs disabled:opacity-50 flex items-center justify-center gap-2">
+                  <button onClick={handlePaymentSubmit} disabled={!isPaymentValid() || state.isProcessing} className="flex-1 bg-burgundy text-black py-4 rounded-full uppercase tracking-widest text-xs disabled:opacity-50 flex items-center justify-center gap-2">
                     {state.isProcessing ? <><Loader2 size={16} className="animate-spin" /> Procesando...</> : <>Finalizar Compra <Lock size={16} /></>}
                   </button>
                 </div>
@@ -301,8 +301,8 @@ export default function CheckoutPage() {
               </div>
               <div className="border-t border-white/10 pt-4 space-y-3">
                 <div className="flex justify-between text-sm"><span className="text-white/60">Subtotal</span><span>{formatPrice(subtotal)}</span></div>
-                <div className="flex justify-between text-sm"><span className="text-white/60">Envío</span><span className={shippingCost === 0 ? "text-antique-gold" : ""}>{shippingCost === 0 ? "Gratis" : formatPrice(shippingCost)}</span></div>
-                <div className="flex justify-between text-lg font-medium pt-3 border-t border-white/10"><span>Total</span><span className="text-antique-gold">{formatPrice(total)}</span></div>
+                <div className="flex justify-between text-sm"><span className="text-white/60">Envío</span><span className={shippingCost === 0 ? "text-burgundy" : ""}>{shippingCost === 0 ? "Gratis" : formatPrice(shippingCost)}</span></div>
+                <div className="flex justify-between text-lg font-medium pt-3 border-t border-white/10"><span>Total</span><span className="text-burgundy">{formatPrice(total)}</span></div>
               </div>
             </div>
           </div>

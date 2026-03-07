@@ -1,11 +1,14 @@
+import SectionDivider from "@/components/SectionDivider";
+
 export default function Contacto() {
     return (
         <main className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#050505] py-20 px-6">
+            <SectionDivider variant="bottom" height="h-24" />
 
             {/* Background Texture/Orbs */}
             <div className="absolute inset-0">
-                <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-amber-900/20 rounded-full blur-[120px] pointer-events-none" />
-                <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] bg-yellow-900/10 rounded-full blur-[100px] pointer-events-none" />
+                <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-burgundy/20 rounded-full blur-[120px] pointer-events-none" />
+                <div className="absolute bottom-[-20%] right-[-10%] w-[500px] h-[500px] bg-burgundy/10 rounded-full blur-[100px] pointer-events-none" />
             </div>
 
             {/* Glass Container */}
@@ -58,6 +61,8 @@ export default function Contacto() {
                     <p>HOLA@SACRE.COM.AR</p>
                 </div>
             </div>
+            
+            <SectionDivider variant="top" height="h-24" />
         </main>
     );
 }
