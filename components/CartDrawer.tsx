@@ -86,25 +86,23 @@ export default function CartDrawer() {
           )}
 
           {/* Cart Items */}
-          
-          return (
-            <div className="flex-1 overflow-y-auto p-6 space-y-4">
-              {isLoading && (
-                <div className="flex items-center justify-center h-32">
-                  <div className="w-8 h-8 border-2 border-white/20 border-t-burgundy rounded-full animate-spin" />
-                </div>
-              )}
-              
-              {isEmpty && (
-                <div className="flex flex-col items-center justify-center h-64 text-center">
-                  <ShoppingBag size={48} className="text-white/20 mb-4" />
-                  <p className="text-white/60 mb-2">Tu carrito está vacío</p>
-                  <p className="text-white/40 text-sm">Agregá nuestros productos</p>
-                </div>
-              )}
-              
-              {hasItems && (
-                items.map((item) => (
+          <div className="flex-1 overflow-y-auto p-6 space-y-4">
+            {isLoading && (
+              <div className="flex items-center justify-center h-32">
+                <div className="w-8 h-8 border-2 border-white/20 border-t-burgundy rounded-full animate-spin" />
+              </div>
+            )}
+            
+            {isEmpty && (
+              <div className="flex flex-col items-center justify-center h-64 text-center">
+                <ShoppingBag size={48} className="text-white/20 mb-4" />
+                <p className="text-white/60 mb-2">Tu carrito está vacío</p>
+                <p className="text-white/40 text-sm">Agregá nuestros productos</p>
+              </div>
+            )}
+            
+            {hasItems && (
+              items.map((item) => (
                 <div 
                   key={item.product.id}
                   className="flex gap-4 p-4 bg-white/5 rounded-xl border border-white/5"

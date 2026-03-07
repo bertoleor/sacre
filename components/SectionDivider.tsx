@@ -1,8 +1,8 @@
 "use client";
 
 interface SectionDividerProps {
-    variant?: "top" | "bottom" | "both";
-    height?: string;
+    readonly variant?: "top" | "bottom" | "both";
+    readonly height?: string;
 }
 
 export default function SectionDivider({ 
@@ -20,9 +20,6 @@ export default function SectionDivider({
             {(variant === "bottom" || variant === "both") && (
                 <div className="absolute bottom-0 left-0 w-full h-full bg-gradient-to-t from-[#050505] via-[#050505]/80 to-transparent" />
             )}
-            
-            {/* Subtle line for visual separation (optional) */}
-            <div className="absolute bottom-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/5 to-transparent" />
         </div>
     );
 }

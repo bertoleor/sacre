@@ -43,7 +43,7 @@ export default function ElChocolate() {
 
                     {/* Left Text */}
                     <div className="space-y-20 text-right hidden md:block relative z-10">
-                        <div className="pr-12 border-r border-white/10 py-8 bg-black/60 backdrop-blur-md p-8 rounded-xl border border-white/5">
+                        <div className="pr-12 border-r border-white/10 py-8 bg-black/60 backdrop-blur-md p-8 rounded-xl border border-white/10">
                             <h3 className="font-cronde text-4xl mb-4 text-white">Las Flores</h3>
                             <p className="font-light text-sm leading-relaxed text-white/80">
                                 Nacen en delicados racimos, "cojines florales" que brotan directamente del tronco.
@@ -65,7 +65,7 @@ export default function ElChocolate() {
 
                     {/* Right Text */}
                     <div className="space-y-20 md:pt-40 relative z-10">
-                        <div className="pl-12 border-l border-white/10 py-8 bg-black/60 backdrop-blur-md p-8 rounded-xl border border-white/5">
+                        <div className="pl-12 border-l border-white/10 py-8 bg-black/60 backdrop-blur-md p-8 rounded-xl border border-white/10">
                             <h3 className="font-cronde text-4xl mb-4 text-white">El Fruto</h3>
                             <p className="font-light text-sm leading-relaxed text-white/80">
                                 Solo 30 de cada 6.000 flores se transforman.

@@ -21,7 +21,7 @@ export default function Contacto() {
                         <input
                             type="text"
                             id="name"
-                            className="w-full bg-transparent border-b border-white/20 py-2 text-white placeholder-white/20 focus:outline-none focus:border-white transition-all duration-500"
+                            className="w-full bg-transparent border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/20 focus:outline-none focus:border-burgundy transition-all duration-500"
                             placeholder="Tu nombre"
                         />
                     </div>
@@ -31,7 +31,7 @@ export default function Contacto() {
                         <input
                             type="email"
                             id="email"
-                            className="w-full bg-transparent border-b border-white/20 py-2 text-white placeholder-white/20 focus:outline-none focus:border-white transition-all duration-500"
+                            className="w-full bg-transparent border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/20 focus:outline-none focus:border-burgundy transition-all duration-500"
                             placeholder="tu@email.com"
                         />
                     </div>
@@ -41,7 +41,7 @@ export default function Contacto() {
                         <textarea
                             id="message"
                             rows={4}
-                            className="w-full bg-transparent border-b border-white/20 py-2 text-white placeholder-white/20 focus:outline-none focus:border-white transition-all duration-500 resize-none"
+                            className="w-full bg-transparent border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/20 focus:outline-none focus:border-burgundy transition-all duration-500 resize-none"
                             placeholder="¿En qué podemos ayudarte?"
                         />
                     </div>

@@ -1,9 +1,12 @@
 import Link from "next/link";
 import { Mail } from "lucide-react";
+import SectionDivider from "@/components/SectionDivider";
 
 export default function Footer() {
     return (
-        <footer className="bg-[#050505] text-white py-20 border-t border-white/10">
+        <>
+            <SectionDivider variant="top" height="h-24" />
+            <footer className="bg-[#050505] text-white py-20 border-t border-white/10">
             <div className="max-w-7xl mx-auto px-6 flex flex-col items-center text-center">
                 <Link href="/" className="font-cronde text-4xl md:text-5xl mb-12 tracking-wider hover:opacity-80 transition-opacity">
                     SACRÉ
@@ -26,5 +29,6 @@ export default function Footer() {
                 </div>
             </div>
         </footer>
+        </>
     );
 }

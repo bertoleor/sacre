@@ -4,6 +4,9 @@ import Link from "next/link";
 export default function Hero() {
     return (
         <section className="h-screen w-full flex flex-col justify-center items-center relative overflow-hidden">
+            {/* Top gradient - smooth fade from page background */}
+            <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-[#050505] via-[#050505]/50 to-transparent z-30" />
+            
             {/* Background Image */}
             <div className="absolute inset-0 z-0">
                 <Image

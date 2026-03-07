@@ -44,18 +44,18 @@ export default function ProductGrid({ category }: { readonly category?: string }
                                         />
                                     </div>
 
-                                    <div className="p-6 pt-0 space-y-4 text-center">
-                                        <h3 className="text-xl font-cronde text-cream-accent group-hover:text-burgundy transition-colors">
+                                    <div className="p-6 pt-0 flex flex-col justify-end min-h-[200px] text-center">
+                                        <h3 className="text-xl font-cronde text-cream-accent group-hover:text-burgundy transition-colors mb-2">
                                             {product.name}
                                         </h3>
-                                        <p className="text-stone-400 text-sm font-light leading-relaxed">
+                                        <p className="text-stone-400 text-sm font-light line-clamp-2 mb-4">
                                             {product.description}
                                         </p>
-                                        <p className="text-burgundy font-medium tracking-wide pt-2 text-lg">
+                                        <p className="text-burgundy font-medium tracking-wide text-lg">
                                             $ {product.price.toLocaleString("es-AR")}
                                         </p>
 
-                                        <div className="w-full mt-6 py-3 border border-white/10 text-stone-300 text-xs uppercase tracking-widest group-hover:bg-burgundy group-hover:text-black group-hover:border-burgundy transition-all duration-300 flex items-center justify-center gap-2">
+                                        <div className="w-full mt-4 py-3 border border-white/10 text-stone-300 text-xs uppercase tracking-widest group-hover:bg-burgundy group-hover:text-black group-hover:border-burgundy transition-all duration-300 flex items-center justify-center gap-2">
                                             <Plus className="w-4 h-4" />
                                             Ver Detalle
                                         </div>
