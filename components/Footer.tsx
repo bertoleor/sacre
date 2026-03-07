@@ -26,6 +26,9 @@ export default function Footer() {
 
                 <div className="text-xs uppercase tracking-widest opacity-40 font-light">
                     <p>&copy; {new Date().getFullYear()} SACRÉ. Todos los derechos reservados.</p>
+                    <p className="mt-2">
+                        <Link href="/terminos" className="hover:text-white transition-colors">Términos y Condiciones</Link>
+                    </p>
                 </div>
             </div>
         </footer>

@@ -8,6 +8,7 @@ export interface Product {
     category: "bombones" | "tabletas" | "especiales";
     featured?: boolean;
     stock?: number;
+    tags?: string[];
 }
 
 export const products: Product[] = [

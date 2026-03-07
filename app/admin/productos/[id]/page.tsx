@@ -3,7 +3,10 @@
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { products, Product } from "@/lib/data";
-import { ArrowLeft, Save, Upload, X, Star, Package, Trash2 } from "lucide-react";
+import { ArrowLeft, Save, X, Star, Package, Trash2 } from "lucide-react";
+import { useEditor, EditorContent } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Placeholder from "@tiptap/extension-placeholder";
 
 export default function AdminProductEdit() {
     const router = useRouter();
@@ -13,6 +16,7 @@ export default function AdminProductEdit() {
 
     const [loading, setLoading] = useState(!isNew);
     const [saving, setSaving] = useState(false);
+    const [tagInput, setTagInput] = useState("");
     const [product, setProduct] = useState<Product>({
         id: "",
         name: "",
@@ -23,6 +27,25 @@ export default function AdminProductEdit() {
         category: "bombones",
         featured: false,
         stock: 0,
+        tags: [],
+    });
+
+    const editor = useEditor({
+        extensions: [
+            StarterKit,
+            Placeholder.configure({
+                placeholder: "Describe el producto con detalles, sabores, origen...",
+            }),
+        ],
+        content: product.description,
+        onUpdate: ({ editor }) => {
+            setProduct({ ...product, description: editor.getHTML() });
+        },
+        editorProps: {
+            attributes: {
+                class: "prose prose-invert max-w-none focus:outline-none min-h-[120px] px-4 py-3 text-white/80",
+            },
+        },
     });
 
     useEffect(() => {
@@ -30,15 +53,16 @@ export default function AdminProductEdit() {
             const existingProduct = products.find(p => p.id === productId);
             if (existingProduct) {
                 setProduct(existingProduct);
+                if (editor) {
+                    editor.commands.setContent(existingProduct.description);
+                }
             }
             setLoading(false);
         }
-    }, [isNew, productId]);
+    }, [isNew, productId, editor]);
 
     const handleSave = async () => {
         setSaving(true);
-        // In a real app, this would save to a database
-        // For now, we'll just simulate a save
         setTimeout(() => {
             setSaving(false);
             router.push("/admin/productos");
@@ -47,9 +71,25 @@ export default function AdminProductEdit() {
 
     const handleDelete = () => {
         if (confirm("¿Estás seguro de que quieres eliminar este producto?")) {
-            // In a real app, this would delete from database
             router.push("/admin/productos");
         }
+    };
+
+    const addTag = () => {
+        if (tagInput.trim() && !(product.tags || []).includes(tagInput.trim())) {
+            setProduct({ 
+                ...product, 
+                tags: [...(product.tags || []), tagInput.trim()] 
+            });
+            setTagInput("");
+        }
+    };
+
+    const removeTag = (tagToRemove: string) => {
+        setProduct({ 
+            ...product, 
+            tags: (product.tags || []).filter(tag => tag !== tagToRemove) 
+        });
     };
 
     if (loading) {
@@ -126,18 +166,89 @@ export default function AdminProductEdit() {
                             />
                         </div>
 
-                        {/* Description */}
+                        {/* Description with TipTap */}
                         <div className="space-y-2">
                             <label className="block text-xs uppercase tracking-widest text-white/50">
                                 Descripción
                             </label>
-                            <textarea
-                                value={product.description}
-                                onChange={(e) => setProduct({ ...product, description: e.target.value })}
-                                rows={4}
-                                className="w-full bg-transparent border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/20 focus:border-burgundy focus:outline-none transition-colors resize-none"
-                                placeholder="Describe el producto..."
-                            />
+                            <div className="bg-transparent border border-white/20 rounded-xl overflow-hidden focus-within:border-burgundy transition-colors">
+                                {/* Toolbar */}
+                                <div className="flex gap-1 p-2 border-b border-white/10 bg-white/5">
+                                    <button
+                                        onClick={() => editor?.chain().focus().toggleBold().run()}
+                                        className={`p-2 rounded-lg hover:bg-white/10 ${editor?.isActive("bold") ? "bg-white/20 text-burgundy" : "text-white/60"}`}
+                                        type="button"
+                                    >
+                                        <span className="font-bold">B</span>
+                                    </button>
+                                    <button
+                                        onClick={() => editor?.chain().focus().toggleItalic().run()}
+                                        className={`p-2 rounded-lg hover:bg-white/10 ${editor?.isActive("italic") ? "bg-white/20 text-burgundy" : "text-white/60"}`}
+                                        type="button"
+                                    >
+                                        <span className="italic">I</span>
+                                    </button>
+                                    <button
+                                        onClick={() => editor?.chain().focus().toggleBulletList().run()}
+                                        className={`p-2 rounded-lg hover:bg-white/10 ${editor?.isActive("bulletList") ? "bg-white/20 text-burgundy" : "text-white/60"}`}
+                                        type="button"
+                                    >
+                                        •
+                                    </button>
+                                    <button
+                                        onClick={() => editor?.chain().focus().toggleOrderedList().run()}
+                                        className={`p-2 rounded-lg hover:bg-white/10 ${editor?.isActive("orderedList") ? "bg-white/20 text-burgundy" : "text-white/60"}`}
+                                        type="button"
+                                    >
+                                        1.
+                                    </button>
+                                </div>
+                                <EditorContent editor={editor} />
+                            </div>
+                        </div>
+
+                        {/* Tags */}
+                        <div className="space-y-2">
+                            <label className="block text-xs uppercase tracking-widest text-white/50">
+                                Etiquetas
+                            </label>
+                            <div className="flex gap-2">
+                                <input
+                                    type="text"
+                                    value={tagInput}
+                                    onChange={(e) => setTagInput(e.target.value)}
+                                    onKeyDown={(e) => e.key === "Enter" && (e.preventDefault(), addTag())}
+                                    className="flex-1 bg-transparent border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/20 focus:border-burgundy focus:outline-none transition-colors"
+                                    placeholder="Agregar etiqueta (ej: vegano, sin azúcar)"
+                                />
+                                <button
+                                    onClick={addTag}
+                                    type="button"
+                                    className="px-4 py-2 bg-white/10 text-white/60 hover:text-white hover:bg-white/20 rounded-xl transition-colors"
+                                >
+                                    +
+                                </button>
+                            </div>
+                            {/* Tags Display */}
+                            {(product.tags || []).length > 0 && (
+                                <div className="flex flex-wrap gap-2 mt-3">
+                                    {(product.tags || []).map((tag) => (
+                                        <span
+                                            key={tag}
+                                            className="inline-flex items-center gap-1 px-3 py-1 bg-burgundy/20 text-burgundy rounded-full text-sm"
+                                        >
+                                            {tag}
+                                            <button
+                                                onClick={() => removeTag(tag)}
+                                                className="hover:text-white"
+                                                type="button"
+                                            >
+                                                <X size={14} />
+                                            </button>
+                                        </span>
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
                         {/* Category */}
@@ -239,9 +350,10 @@ export default function AdminProductEdit() {
                             />
                         </div>
                         <h3 className="text-white font-medium mb-1">{product.name || "Nombre del producto"}</h3>
-                        <p className="text-white/40 text-sm line-clamp-2 mb-2">
-                            {product.description || "Descripción del producto"}
-                        </p>
+                        <div 
+                            className="text-white/40 text-sm line-clamp-3 mb-2 prose prose-invert"
+                            dangerouslySetInnerHTML={{ __html: product.description || "Descripción del producto" }}
+                        />
                         <p className="text-burgundy font-medium">
                             ${product.price.toLocaleString("es-AR") || "0"}
                         </p>
