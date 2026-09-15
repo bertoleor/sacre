@@ -6,7 +6,12 @@
 
 | Documento | Contenido |
 |---|---|
+| [`stack-framework.md`](stack-framework.md) | **Baseline stack**: Next 16 + React 19 + Tailwind 4, Supabase, MP, Resend; arquitectura, setup y convenciones. |
+| [`funciones-ecommerce.md`](funciones-ecommerce.md) | **Baseline funciones**: catálogo, carrito, checkout, pagos/webhook, admin, contenido y pendientes F1–F5. |
+| [`branding-identidad-visual.md`](branding-identidad-visual.md) | **Baseline branding**: paleta, tipografías Cronde/Montserrat, glassmorphism, fotografía. |
 | [`reporte-producto-marketing-estilo-2026-09-14.md`](reporte-producto-marketing-estilo-2026-09-14.md) | **Doc de producto**: qué es, catálogo, flujo de checkout/webhook MP, admin, tono de marketing, identidad visual, estado y próximos pasos (F1–F5). |
+| [`07-repos-relacionados.md`](07-repos-relacionados.md) | Repos relacionados: dónde vive cada cosa del ecosistema SACRÉ (mapeo por proyecto). |
+| [`STATUS.md`](STATUS.md) | **Estado técnico** verificado 2026-09-15: build, tests, DB, cumplimiento vs spec y pendientes F1–F5. |
 | [`../README.md`](../README.md) | Landing de setup del repo (Stack, Struktura, Spec y fases). |
 
 ## Mapas de referencia (fuera del repo, canónicos)
