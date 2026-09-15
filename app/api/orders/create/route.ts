@@ -111,16 +111,16 @@ async function createMercadoPagoPreference(
       {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          items: items.map((item) => ({
-            title: item.productName || "Producto SACRÉ",
-            quantity: item.quantity,
-            unit_price: item.price,
-            currency_id: "ARS",
-          })),
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify({
+                  items: items.map((item) => ({
+                    title: item.productName || "Producto SACRÉ",
+                    quantity: item.quantity,
+                    unit_price: item.price,
+                    currency_id: "ARS",
+                  })),
           back_urls: {
             success: `${siteUrl}/checkout/success`,
             failure: `${siteUrl}/checkout/failure`,
@@ -153,12 +153,12 @@ async function sendConfirmationEmail(
     await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        from: "SACRÉ <noreply@sacre.com.ar>",
-        to: customerEmail,
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify({
+              from: "SACRÉ <noreply@sacre.com.ar>",
+              to: customerEmail,
         subject: `Confirmación de tu pedido ${orderNumber}`,
         html: `
           <h1>¡Gracias por tu compra!</h1>
