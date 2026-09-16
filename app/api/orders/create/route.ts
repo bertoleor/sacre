@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@/lib/supabase/client";
+import { sendOrderConfirmation } from "@/lib/email/resend";
 
 interface OrderItem {
   product_id?: string;
@@ -142,39 +143,24 @@ async function createMercadoPagoPreference(
 
 async function sendConfirmationEmail(
   customerEmail: string,
+  customerName: string,
   orderNumber: string,
   total: number,
+  items: { name: string; quantity: number; price: number }[],
   paymentUrl: string | null
 ) {
-  const token = process.env.RESEND_API_KEY;
-  if (!token) return;
-
-  try {
-    await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
-              from: "SACRÉ <noreply@sacre.com.ar>",
-              to: customerEmail,
-        subject: `Confirmación de tu pedido ${orderNumber}`,
-        html: `
-          <h1>¡Gracias por tu compra!</h1>
-          <p>Tu número de pedido es: <strong>${orderNumber}</strong></p>
-          <p>Total: $${total.toLocaleString("es-AR")}</p>
-          ${
-            paymentUrl
-              ? `<p><a href="${paymentUrl}">Pagar con MercadoPago</a></p>`
-              : ""
-          }
-        `,
-      }),
-    });
-  } catch (error) {
-    console.error("Email error:", error);
-  }
+  // Module never throws: failures are logged and the order still succeeds.
+  await sendOrderConfirmation(
+    {
+      to: customerEmail,
+      orderNumber,
+      total,
+      items,
+      paymentUrl,
+      customerName,
+    },
+    { idempotencyKey: `order-confirmation/${orderNumber}` }
+  );
 }
 
 export async function POST(request: NextRequest) {
@@ -214,8 +200,14 @@ export async function POST(request: NextRequest) {
 
     await sendConfirmationEmail(
       body.customer.email,
+      `${body.customer.firstName} ${body.customer.lastName}`.trim(),
       body.order_number,
       body.total,
+      body.items.map((item) => ({
+        name: item.productName || "Producto SACRÉ",
+        quantity: item.quantity,
+        price: item.price,
+      })),
       paymentUrl
     );
 

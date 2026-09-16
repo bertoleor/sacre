@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createHmac, timingSafeEqual } from "crypto";
 import { createServerClient } from "@/lib/supabase/client";
+import { sendOrderStatus } from "@/lib/email/resend";
 
 /**
  * Valida la firma `x-signature` de Mercado Pago.
@@ -42,6 +43,12 @@ function verifyXSignature(
   return timingSafeEqual(hashBuf, expectedBuf);
 }
 
+/** Tipado del payload de notificación de Mercado Pago (webhook). */
+interface MercadoPagoNotification {
+  type?: string;
+  data?: { id?: string | number; request_id?: string };
+}
+
 function getPaymentStatus(paymentStatus: string): string {
   if (paymentStatus === "approved") return "approved";
   if (paymentStatus === "rejected") return "rejected";
@@ -61,42 +68,14 @@ function getOrderStatus(paymentStatus: string): string {
 async function sendPaymentEmail(
   email: string,
   orderNumber: string,
-  status: string
+  status: string,
+  paymentId: string
 ) {
-  const token = process.env.RESEND_API_KEY;
-  if (!token) return;
-
-  const approved = status === "approved";
-  const subject = approved
-    ? `¡Pago aprobado! Tu pedido ${orderNumber} está en camino`
-    : `Actualización de tu pago ${orderNumber}`;
-
-  try {
-    await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({
-        from: "SACRÉ <noreply@sacre.com.ar>",
-        to: email,
-        subject,
-        html: `
-          <h1>${approved ? "¡Pago acreditado! 🎉" : "Actualización de tu pedido"}</h1>
-          <p>Pedido: <strong>${orderNumber}</strong></p>
-          <p>Estado del pago: <strong>${status}</strong></p>
-          ${
-            approved
-              ? "<p>Nos pusimos a preparar tu pedido. Te avisamos cuando esté listo.</p>"
-              : "<p>Si tenés dudas, escribinos a hola@sacre.com.ar</p>"
-          }
-        `,
-      }),
-    });
-  } catch (error) {
-    console.error("Payment email error:", error);
-  }
+  // Module never throws: failures are logged and the webhook still ACKs 200.
+  await sendOrderStatus(
+    { to: email, orderNumber, paymentStatus: status },
+    { idempotencyKey: `payment-${status}/${paymentId}` }
+  );
 }
 
 async function updateOrderStatus(
@@ -164,13 +143,13 @@ async function updateOrderStatus(
   // Mail de aprobación/rechazo al cliente
   const email = existing?.customer_email || existing?.guest_email || null;
   if (email) {
-    await sendPaymentEmail(email, externalReference, status);
+    await sendPaymentEmail(email, externalReference, status, paymentId);
   }
 }
 
 export async function POST(request: NextRequest) {
   // Leemos el body UNA sola vez. Leerlo dos veces deja la segunda vacía.
-  let data: any;
+  let data: MercadoPagoNotification;
   try {
     data = await request.json();
   } catch (e) {
@@ -193,7 +172,7 @@ export async function POST(request: NextRequest) {
   }
 
   const { type, data: webhookData } = data;
-  const paymentId = webhookData?.id;
+    const paymentId = webhookData?.id?.toString();
 
   // Siempre ACK a MP para evitar reintentos en bucle (200 {success:true}).
   // Los tópicos distintos a `payment` (eg `merchant_order`) no se procesan.
