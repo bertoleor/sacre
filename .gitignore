@@ -33,6 +33,12 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# supabase cli
+supabase/.temp/
+
+# build logs
+sacre_build.log
+
 # IDE
 .vscode/
 .idea/

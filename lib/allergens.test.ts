@@ -1,55 +1,56 @@
-import test from "node:test";
-import assert from "node:assert/strict";
-import { ALLERGEN_FALLBACK, formatAllergenLabel } from "./allergens.ts";
+import { describe, expect, it } from "vitest";
+import { ALLERGEN_FALLBACK, formatAllergenLabel } from "./allergens";
 
 const FALLBACK = "Consultá antes de comprar: información de alérgenos no disponible.";
 
-test("fallback con undefined", () => {
-    assert.equal(formatAllergenLabel(undefined), FALLBACK);
-});
+describe("formatAllergenLabel", () => {
+    it("fallback con undefined", () => {
+        expect(formatAllergenLabel(undefined)).toBe(FALLBACK);
+    });
 
-test("fallback con null", () => {
-    assert.equal(formatAllergenLabel(null), FALLBACK);
-});
+    it("fallback con null", () => {
+        expect(formatAllergenLabel(null)).toBe(FALLBACK);
+    });
 
-test("fallback con array vacío o solo espacios", () => {
-    assert.equal(formatAllergenLabel([]), FALLBACK);
-    assert.equal(formatAllergenLabel(["   ", ""]), FALLBACK);
-});
+    it("fallback con array vacío o solo espacios", () => {
+        expect(formatAllergenLabel([])).toBe(FALLBACK);
+        expect(formatAllergenLabel(["   ", ""])).toBe(FALLBACK);
+    });
 
-test("exporta el mismo fallback que devuelve", () => {
-    assert.equal(ALLERGEN_FALLBACK, FALLBACK);
-});
+    it("exporta el mismo fallback que devuelve", () => {
+        expect(ALLERGEN_FALLBACK).toBe(FALLBACK);
+    });
 
-test("un alérgeno", () => {
-    assert.equal(formatAllergenLabel(["leche"]), "Contiene: Leche.");
-});
+    it("un alérgeno", () => {
+        expect(formatAllergenLabel(["leche"])).toBe("Contiene: Leche.");
+    });
 
-test("varios alérgenos en orden de aparición", () => {
-    assert.equal(
-        formatAllergenLabel(["leche", "avellana", "gluten"]),
-        "Contiene: Leche, Avellana, Gluten.",
-    );
-});
+    it("varios alérgenos en orden de aparición", () => {
+        expect(formatAllergenLabel(["leche", "avellana", "gluten"])).toBe(
+            "Contiene: Leche, Avellana, Gluten."
+        );
+    });
 
-test("alias en inglés mapean a español", () => {
-    assert.equal(
-        formatAllergenLabel(["milk", "hazelnut", "soy"]),
-        "Contiene: Leche, Avellana, Soja.",
-    );
-});
+    it("alias en inglés mapean a español", () => {
+        expect(formatAllergenLabel(["milk", "hazelnut", "soy"])).toBe(
+            "Contiene: Leche, Avellana, Soja."
+        );
+    });
 
-test("trim + dedupe case-insensitive", () => {
-    assert.equal(formatAllergenLabel([" Leche ", "leche", "SOJA"]), "Contiene: Leche, Soja.");
-});
+    it("trim + dedupe case-insensitive", () => {
+        expect(formatAllergenLabel([" Leche ", "leche", "SOJA"])).toBe(
+            "Contiene: Leche, Soja."
+        );
+    });
 
-test("valor desconocido se capitaliza", () => {
-    assert.equal(formatAllergenLabel(["maní"]), "Contiene: Maní.");
-});
+    it("valor desconocido se capitaliza", () => {
+        expect(formatAllergenLabel(["maní"])).toBe("Contiene: Maní.");
+    });
 
-test("contenido por producto, no genérico", () => {
-    const a = formatAllergenLabel(["leche"]);
-    const b = formatAllergenLabel(["gluten", "soja"]);
-    assert.notEqual(a, b);
-    assert.equal(b, "Contiene: Gluten, Soja.");
+    it("contenido por producto, no genérico", () => {
+        const a = formatAllergenLabel(["leche"]);
+        const b = formatAllergenLabel(["gluten", "soja"]);
+        expect(a).not.toBe(b);
+        expect(b).toBe("Contiene: Gluten, Soja.");
+    });
 });
