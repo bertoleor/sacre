@@ -1,0 +1,19 @@
+{
+  "tool": "rdd-receipt-mvp",
+  "at": "2026-09-26T17:28:28.830378+00:00",
+  "repo": "E:\\Hermes\\projects\\sacre-shop",
+  "base_head": "89bf008eaebb576e43b0178fc141c6a1ce58c645",
+  "frozen_sha256": "67f2649993d612b424eaaa7a396931248a1d61736c104a90352473d4741525c3",
+  "files": [
+    ".env.example",
+    ".gitignore",
+    "app/api/webhooks/mercadopago/route.ts",
+    "lib/webhooks/mercadopago.test.ts",
+    "lib/webhooks/mercadopago.ts",
+    "odd/tasks/webhook-mp-secret-tests.md",
+    "package-lock.json",
+    "package.json"
+  ],
+  "verdict": "Approved-staged",
+  "note": "MVP: firma hash de staging. El juicio 4R/refutador corre aparte y su veredicto se anexa con --annex."
+}

@@ -1,62 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createHmac, timingSafeEqual } from "crypto";
 import { createServerClient } from "@/lib/supabase/client";
-
-/**
- * Valida la firma `x-signature` de Mercado Pago.
- *
- * Algoritmo oficial (Checkout Pro / Webhooks con x-Signature):
- *  - header x-signature: "ts=<timestamp>,v1=<hmac hex>"
- *  - manifest: "id:<data.id>;request-id:<x-request-id>;ts:<ts>;"
- *    (los pares ausentes se omiten del template)
- *  - HMAC-SHA256(manifest, webhook secret) en hexadecimal
- *  - comparación timing-safe contra v1
- */
-function verifyXSignature(
-  xSignature: string,
-  xRequestId: string,
-  dataId: string
-): boolean {
-  const pairs = Object.fromEntries(
-    xSignature
-      .split(",")
-      .map((part) => part.trim().split("="))
-      .filter((kv) => kv.length >= 2)
-      .map(([key, ...val]) => [key, val.join("=")])
-  );
-
-  const ts = pairs["ts"];
-  const v1 = pairs["v1"];
-  if (!ts || !v1) return false;
-
-  const manifest = `id:${dataId};request-id:${xRequestId};ts:${ts};`;
-
-  const secret = process.env.MERCADOPAGO_WEBHOOK_SECRET;
-  if (!secret) return false;
-
-  const expected = createHmac("sha256", secret).update(manifest).digest("hex");
-  const hashBuf = Buffer.from(v1, "utf8");
-  const expectedBuf = Buffer.from(expected, "utf8");
-
-  if (hashBuf.length !== expectedBuf.length) return false;
-  return timingSafeEqual(hashBuf, expectedBuf);
-}
-
-function getPaymentStatus(paymentStatus: string): string {
-  if (paymentStatus === "approved") return "approved";
-  if (paymentStatus === "rejected") return "rejected";
-  if (paymentStatus === "cancelled" || paymentStatus === "refunded")
-    return paymentStatus;
-  return "pending";
-}
-
-function getOrderStatus(paymentStatus: string): string {
-  if (paymentStatus === "approved") return "processing";
-  if (paymentStatus === "rejected" || paymentStatus === "cancelled")
-    return "cancelled";
-  if (paymentStatus === "refunded") return "refunded";
-  return "payment_pending";
-}
+import {
+  verifyXSignature,
+  getPaymentStatus,
+  getOrderStatus,
+} from "@/lib/webhooks/mercadopago";
 
 async function sendPaymentEmail(
   email: string,

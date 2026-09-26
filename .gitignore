@@ -38,6 +38,11 @@ supabase/.temp/
 
 # build logs
 sacre_build.log
+npm-install-*.log
+vitest-final.log
+
+# security scan artifacts
+trivy-sec-semanal.json
 
 # IDE
 .vscode/
