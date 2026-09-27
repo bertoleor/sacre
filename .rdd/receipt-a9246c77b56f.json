@@ -1,0 +1,13 @@
+{
+  "tool": "rdd-receipt-mvp",
+  "at": "2026-09-27T06:28:39.072730+00:00",
+  "repo": "E:\\Hermes\\projects\\sacre-shop",
+  "base_head": "b5f798ab4f39b653ab6b01253a06a3cbb7169266",
+  "frozen_sha256": "a9246c77b56f210b4162da2afcefadfe6a35a3fab909719af232630b5748c330",
+  "files": [
+    "package-lock.json",
+    "package.json"
+  ],
+  "verdict": "Approved-staged",
+  "note": "MVP: firma hash de staging. El juicio 4R/refutador corre aparte y su veredicto se anexa con --annex."
+}
