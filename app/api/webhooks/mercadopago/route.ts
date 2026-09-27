@@ -6,11 +6,29 @@ import {
   getOrderStatus,
 } from "@/lib/webhooks/mercadopago";
 
+/**
+ * Dependencias inyectables del handler. En producción el seam queda vacío
+ * y se usan las reales; en tests se inyectan mocks explícitos para no
+ * requerir red ni DB. El contrato HTTP observable no cambia (401/400/200).
+ *
+ * NOTA: la inyección NO va por segundo parámetro de POST porque Next 16
+ * typegen exige que ese parámetro sea el contexto de ruta `{ params }`.
+ */
+export interface WebhookDeps {
+  fetchImpl?: typeof fetch;
+  createClientImpl?: () => ReturnType<typeof createServerClient>;
+  sendEmailImpl?: typeof sendPaymentEmail;
+}
+
+/** Seam de test: los tests asignan mocks acá antes de invocar POST. */
+export const __testDeps: WebhookDeps = {};
+
 async function sendPaymentEmail(
   email: string,
   orderNumber: string,
-  status: string
-) {
+  status: string,
+  fetchImpl: typeof fetch = fetch
+): Promise<void> {
   const token = process.env.RESEND_API_KEY;
   if (!token) return;
 
@@ -20,7 +38,7 @@ async function sendPaymentEmail(
     : `Actualización de tu pago ${orderNumber}`;
 
   try {
-    await fetch("https://api.resend.com/emails", {
+    await fetchImpl("https://api.resend.com/emails", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -47,8 +65,10 @@ async function sendPaymentEmail(
   }
 }
 
+type SupabaseLike = ReturnType<typeof createServerClient>;
+
 async function updateOrderStatus(
-  supabase: ReturnType<typeof createServerClient>,
+  supabase: SupabaseLike,
   externalReference: string,
   paymentId: string,
   paymentStatus: string
@@ -112,11 +132,15 @@ async function updateOrderStatus(
   // Mail de aprobación/rechazo al cliente
   const email = existing?.customer_email || existing?.guest_email || null;
   if (email) {
-    await sendPaymentEmail(email, externalReference, status);
+    const sendEmail = __testDeps.sendEmailImpl ?? sendPaymentEmail;
+    await sendEmail(email, externalReference, status);
   }
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  const doFetch = __testDeps.fetchImpl ?? fetch;
+  const createClient = __testDeps.createClientImpl ?? createServerClient;
+
   // Leemos el body UNA sola vez. Leerlo dos veces deja la segunda vacía.
   let data: any;
   try {
@@ -149,7 +173,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true });
   }
 
-  const mpResponse = await fetch(
+  const mpResponse = await doFetch(
     `https://api.mercadopago.com/v1/payments/${paymentId}`,
     {
       headers: {
@@ -167,7 +191,7 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const supabase = createServerClient();
+    const supabase = createClient();
     await updateOrderStatus(
       supabase,
       externalReference,
