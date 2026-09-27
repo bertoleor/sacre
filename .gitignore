@@ -43,6 +43,8 @@ vitest-final.log
 
 # security scan artifacts
 trivy-sec-semanal.json
+trivy-orn200*.json
+trivy-orn200*.log
 
 # IDE
 .vscode/
