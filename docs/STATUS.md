@@ -1,6 +1,7 @@
 # SACRÉ — Estado técnico
 
 > Verificado 2026-09-15 contra `E:/Hermes/docs/plans/sacre-spec.md` y `sacre_build.log`.
+> Parte de: [[projects/sacre-shop/docs/README]] · Relacionados: [[stack-framework]], [[tickets-barrido-2026-09-16]]
 
 - **Build**: PASS — `next build` EXIT=0 (Next.js 16.1.6 Turbopack, TS ok, 24 rutas estáticas/SSG).
 - **Tests**: NINGUNO — sin runner (solo `build`/`lint`/`dev`/`start` en scripts; `strict_tdd: false` en `openspec.config.yaml`); `lint` no ejecutado.

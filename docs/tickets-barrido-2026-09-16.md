@@ -3,6 +3,7 @@
 > Auditoría: tsc EXIT=0 · vitest 23/23 (2 files) · build no re-verificado
 > (timeout del runner; último PASS 2026-09-15 en `docs/STATUS.md`).
 > Pagos/auth: SOLO lectura y reporte — sin modificar (regla LGTM).
+> Parte de: [[projects/sacre-shop/docs/README]] · Relacionados: [[projects/sacre-shop/docs/STATUS]], [[funciones-ecommerce]]
 
 ## P0 (bloqueantes)
 

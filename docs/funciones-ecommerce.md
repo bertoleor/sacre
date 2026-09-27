@@ -1,6 +1,7 @@
 # Funciones del ecommerce — SACRÉ
 
 > Baseline verificado contra código real (2026-09-15). Estado: catálogo mock + modo demo sin DB/credenciales.
+> Parte de: [[projects/sacre-shop/docs/README]] · Relacionados: [[stack-framework]], [[branding-identidad-visual]]
 
 ## Qué es
 

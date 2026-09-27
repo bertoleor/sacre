@@ -1,6 +1,7 @@
 # Repos relacionados — SACRÉ
 
 > Solo documentación (2026-09-15). No se tocó código. Búsqueda web: "sacre shop ecommerce similar" + starters open source afines al stack (Next.js App Router + Supabase).
+> Parte de: [[projects/sacre-shop/docs/README]] · Relacionados: [[stack-framework]], [[funciones-ecommerce]]
 
 ## Nota previa: "Sacre Shop"
 

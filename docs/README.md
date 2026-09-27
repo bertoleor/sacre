@@ -1,6 +1,7 @@
 # Documentación — SACRÉ e-shop
 
 > Índice de la documentación del proyecto **SACRÉ** (`E:/sitios web E/SACRÉ/sacre-shop`). Developer-focused: acá aterriza cualquier `.md` suelto del repo; el README raíz queda como landing de setup.
+> Parte de: [[projects/sacre-shop/README]] · Relacionados: [[stack-framework]], [[funciones-ecommerce]], [[branding-identidad-visual]]
 
 ## Índice
 

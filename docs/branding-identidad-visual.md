@@ -1,6 +1,7 @@
 # Branding e identidad visual — SACRÉ
 
 > Baseline verificado contra `app/globals.css`, `app/layout.tsx`, `app/page.tsx` (2026-09-15).
+> Parte de: [[projects/sacre-shop/docs/README]] · Relacionados: [[funciones-ecommerce]], [[reporte-producto-marketing-estilo-2026-09-14]]
 
 ## Marca
 

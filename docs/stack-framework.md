@@ -1,6 +1,7 @@
 # Stack y framework — SACRÉ e-shop
 
 > Baseline verificado contra código real (2026-09-15). Solo documentación, no se tocó código.
+> Parte de: [[projects/sacre-shop/docs/README]] · Relacionados: [[funciones-ecommerce]], [[projects/sacre-shop/docs/STATUS]]
 
 ## Stack
 

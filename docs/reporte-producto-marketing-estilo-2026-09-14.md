@@ -1,6 +1,7 @@
 # Reporte de producto, marketing y estilo — SACRÉ — 2026-09-14
 
 > Basado en lectura del código real (`app/`, `components/`, `lib/`) + `sacre_build.log` + `package.json`, build verificado OK (Next 16.1.6, EXIT=0, 24 páginas). Provider nvidia. Nada borrado. Sin proyecto Supabase vivo linkeado al 2026-09-14 (project-map marca SACRE `qirzicgqqmcqlvyqskkv`, t5 — UNVERIFIED); el catálogo es mock y el checkout entra en "modo demo" sin DB/credenciales. Todo lo no verificado va marcado UNVERIFIED.
+> Parte de: [[projects/sacre-shop/docs/README]] · Relacionados: [[branding-identidad-visual]], [[funciones-ecommerce]]
 
 ---
 
