@@ -52,3 +52,9 @@ trivy-orn200*.log
 *.swp
 *.swo
 *~
+
+# rdd receipts (local)
+.rdd/
+
+# nightly build logs
+sacre_build_*.log
