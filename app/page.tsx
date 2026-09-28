@@ -4,8 +4,18 @@ import Image from "next/image";
 import FadeIn from "@/components/FadeIn";
 import ProductCarousel from "@/components/ProductCarousel";
 import SectionDivider from "@/components/SectionDivider";
+import { getProductsByCategory, getCatalogClient } from "@/lib/catalog";
 
-export default function Home() {
+// ORN-126: catalog from live DB. ISR: stock/price changes show within 5 min
+// without a rebuild; the page stays static-fast between revalidations.
+export const revalidate = 300;
+
+export default async function Home() {
+    // ORN-126: catalog from live DB (service role). Degrades to empty on DB
+    // outage or missing config — the page renders without the carousel.
+    const supabase = getCatalogClient();
+    const bombones = await getProductsByCategory(supabase, "bombones");
+
     return (
         <main className="bg-[#050505] min-h-screen text-white overflow-x-hidden">
             <Hero />
@@ -89,7 +99,7 @@ export default function Home() {
             {/* Featured Products Carousel */}
             <ProductCarousel 
                 title="Selección" 
-                category="bombones"
+                products={bombones}
             />
 
             {/* Gradient Divider: Products → Origin */}

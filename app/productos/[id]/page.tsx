@@ -1,24 +1,22 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { products } from "@/lib/data";
 import { ArrowLeft, Heart, Star } from "lucide-react";
 import AddToCartButton from "@/components/AddToCartButton";
+import { getProductById, getProducts, getCatalogClient } from "@/lib/catalog";
+
+// ORN-126: ISR so stock/price edits show within 5 min without a rebuild.
+export const revalidate = 300;
 
 interface PageProps {
     params: Promise<{ id: string }>;
 }
 
-export async function generateStaticParams() {
-    return products.map((product) => ({
-        id: product.id.toString(),
-    }));
-}
-
 export async function generateMetadata({ params }: PageProps) {
     const { id } = await params;
-    const product = products.find((p) => p.id.toString() === id);
-    
+    const supabase = getCatalogClient();
+    const product = await getProductById(supabase, id);
+
     if (!product) {
         return {
             title: "Producto no encontrado | SACRÉ",
@@ -27,10 +25,10 @@ export async function generateMetadata({ params }: PageProps) {
 
     return {
         title: `${product.name} | SACRÉ`,
-        description: product.description,
+        description: product.description ?? undefined,
         openGraph: {
             title: `${product.name} | SACRÉ`,
-            description: product.description,
+            description: product.description ?? undefined,
             images: [product.image || product.images?.[0] || ""],
         },
     };
@@ -38,11 +36,17 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function ProductDetailPage({ params }: Readonly<PageProps>) {
     const { id } = await params;
-    const product = products.find((p) => p.id.toString() === id);
+    // ORN-126: product from the live DB. Degrades to null on DB errors or
+    // missing config, so an outage renders a 404, never a 500.
+    const supabase = getCatalogClient();
+    const product = await getProductById(supabase, id);
 
     if (!product) {
         notFound();
     }
+
+    const soldOut = (product.stock ?? 0) <= 0;
+    const allProducts = await getProducts(supabase);
 
     return (
         <main className="min-h-screen bg-[#050505] text-white pt-32 pb-20">
@@ -60,13 +64,20 @@ export default async function ProductDetailPage({ params }: Readonly<PageProps>)
                     {/* Image Section */}
                     <div className="relative aspect-square w-full overflow-hidden rounded-3xl bg-white/5">
                         <Image
-                            src={product.image}
+                            src={product.image || product.images?.[0] || "/images/bombones.png"}
                             alt={product.name}
                             fill
                             className="object-cover"
                             priority
                             sizes="(max-width: 1024px) 100vw, 50vw"
                         />
+                        {soldOut && (
+                            <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                                <span className="uppercase tracking-[0.3em] text-sm border border-white/30 rounded-full px-6 py-3 text-white/80">
+                                    Agotado
+                                </span>
+                            </div>
+                        )}
                     </div>
 
                     {/* Details Section */}
@@ -84,6 +95,15 @@ export default async function ProductDetailPage({ params }: Readonly<PageProps>)
                         {/* Price */}
                         <div className="text-2xl text-burgundy">
                             $ {product.price.toLocaleString("es-AR")}
+                        </div>
+
+                        {/* Stock */}
+                        <div className="text-sm text-white/50">
+                            {soldOut ? (
+                                <span className="text-burgundy uppercase tracking-widest">Sin stock</span>
+                            ) : (
+                                <span>{product.stock} disponibles</span>
+                            )}
                         </div>
 
                         {/* Rating */}
@@ -127,7 +147,17 @@ export default async function ProductDetailPage({ params }: Readonly<PageProps>)
                                     <span className="px-4">1</span>
                                     <button className="text-white/60 hover:text-white px-3">+</button>
                                 </div>
-                                <AddToCartButton product={product} />
+                                {soldOut ? (
+                                    <button
+                                        type="button"
+                                        disabled
+                                        className="flex-1 border border-white/20 text-white/40 px-8 py-3 rounded-full uppercase tracking-widest text-xs cursor-not-allowed flex items-center justify-center gap-3"
+                                    >
+                                        Agotado
+                                    </button>
+                                ) : (
+                                    <AddToCartButton product={product} />
+                                )}
                                 <button className="border border-white/20 p-3 rounded-full hover:border-burgundy hover:text-burgundy transition-colors">
                                     <Heart size={20} />
                                 </button>
@@ -155,7 +185,7 @@ export default async function ProductDetailPage({ params }: Readonly<PageProps>)
                         También te puede gustar
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {products
+                        {allProducts
                             .filter((p) => p.id !== product.id)
                             .slice(0, 3)
                             .map((relatedProduct) => (
@@ -166,7 +196,7 @@ export default async function ProductDetailPage({ params }: Readonly<PageProps>)
                                 >
                                     <div className="relative aspect-square mb-4 overflow-hidden rounded-2xl">
                                         <Image
-                                            src={relatedProduct.image}
+                                            src={relatedProduct.image || relatedProduct.images?.[0] || "/images/bombones.png"}
                                             alt={relatedProduct.name}
                                             fill
                                             className="object-cover transition-transform duration-500 group-hover:scale-105"

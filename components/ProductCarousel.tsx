@@ -2,42 +2,42 @@
 
 import { useRef, useEffect, useState } from "react";
 import { Plus, Star, ChevronLeft, ChevronRight } from "lucide-react";
-import { products } from "@/lib/data";
 import Link from "next/link";
 import GlassCard from "@/components/GlassCard";
+import type { Product } from "@/lib/supabase/types";
 
 interface ProductCarouselProps {
     readonly title?: string;
-    readonly category?: string;
+    readonly products: (Product & { featured?: boolean })[];
     readonly showNavigation?: boolean;
 }
 
+/**
+ * ORN-126: receives catalog products as a prop from the server parent
+ * (fetched from Supabase via lib/catalog) instead of importing the old mock.
+ * Same layout/behavior as before, plus real stock badge.
+ */
 export default function ProductCarousel({
     title = "Colección Exclusiva",
-    category,
+    products,
     showNavigation = true
 }: ProductCarouselProps) {
     const scrollRef = useRef<HTMLDivElement>(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isPaused, setIsPaused] = useState(false);
-    
-    const filteredProducts = category
-        ? products.filter(p => p.category === category)
-        : products;
 
     const scroll = (direction: "left" | "right") => {
         if (scrollRef.current) {
             const containerWidth = scrollRef.current.clientWidth;
-            const scrollAmount = containerWidth;
             scrollRef.current.scrollBy({
-                left: direction === "left" ? -scrollAmount : scrollAmount,
+                left: direction === "left" ? -containerWidth : containerWidth,
                 behavior: "smooth"
             });
-            
+
             // Update current index
             if (direction === "left" && currentIndex > 0) {
                 setCurrentIndex(currentIndex - 1);
-            } else if (direction === "right" && currentIndex < filteredProducts.length - 1) {
+            } else if (direction === "right" && currentIndex < products.length - 1) {
                 setCurrentIndex(currentIndex + 1);
             }
         }
@@ -46,32 +46,34 @@ export default function ProductCarousel({
     // Auto-scroll effect
     useEffect(() => {
         if (isPaused) return;
-        
+
         const interval = setInterval(() => {
             if (scrollRef.current) {
                 const containerWidth = scrollRef.current.clientWidth;
                 const maxScroll = scrollRef.current.scrollWidth - containerWidth;
                 const currentScroll = scrollRef.current.scrollLeft;
-                
+
                 if (currentScroll >= maxScroll - 10) {
                     // Reset to start
                     scrollRef.current.scrollTo({ left: 0, behavior: "smooth" });
                     setCurrentIndex(0);
                 } else {
                     scrollRef.current.scrollBy({ left: containerWidth, behavior: "smooth" });
-                    setCurrentIndex(prev => Math.min(prev + 1, filteredProducts.length - 1));
+                    setCurrentIndex(prev => Math.min(prev + 1, products.length - 1));
                 }
             }
         }, 4000); // 4 seconds auto-scroll
 
         return () => clearInterval(interval);
-    }, [isPaused, filteredProducts.length]);
+    }, [isPaused, products.length]);
 
     // Card width - 1 card at a time on all screens
     const cardWidth = "w-[85vw] md:w-[600px] lg:w-[700px]";
 
+    if (!products.length) return null;
+
     return (
-        <section 
+        <section
             className="relative py-24 bg-[#050505]"
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
@@ -85,10 +87,11 @@ export default function ProductCarousel({
                         </h2>
                         <div className="w-24 h-px bg-burgundy/30" />
                     </div>
-                    
+
                     {showNavigation && (
                         <div className="flex gap-2">
                             <button
+                                type="button"
                                 onClick={() => scroll("left")}
                                 className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white/60 hover:text-burgundy hover:border-burgundy/50 transition-all duration-300"
                                 aria-label="Deslizar a la izquierda"
@@ -96,6 +99,7 @@ export default function ProductCarousel({
                                 <ChevronLeft className="w-5 h-5" />
                             </button>
                             <button
+                                type="button"
                                 onClick={() => scroll("right")}
                                 className="w-12 h-12 rounded-full border border-white/20 flex items-center justify-center text-white/60 hover:text-burgundy hover:border-burgundy/50 transition-all duration-300"
                                 aria-label="Deslizar a la derecha"
@@ -112,14 +116,14 @@ export default function ProductCarousel({
                 {/* Gradient overlays for edges */}
                 <div className="absolute left-0 top-0 bottom-0 w-32 bg-gradient-to-r from-[#050505] to-transparent z-10 pointer-events-none" />
                 <div className="absolute right-0 top-0 bottom-0 w-32 bg-gradient-to-l from-[#050505] to-transparent z-10 pointer-events-none" />
-                
+
                 {/* Scrollable container */}
                 <div
                     ref={scrollRef}
                     className="flex gap-6 overflow-x-auto scrollbar-hide px-6 pb-4 items-stretch snap-x snap-mandatory"
                     style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
                 >
-                    {filteredProducts.map((product, index) => (
+                    {products.map((product) => (
                         <Link
                             key={product.id}
                             href={`/productos/${product.id}`}
@@ -133,13 +137,20 @@ export default function ProductCarousel({
                                         <span className="text-xs text-burgundy uppercase tracking-wider">Destacado</span>
                                     </div>
                                 )}
-                                
+
                                 {/* Product Image */}
-                                <div className="aspect-square mb-6 overflow-hidden flex-shrink-0">
-                                    <div 
+                                <div className="aspect-square mb-6 overflow-hidden flex-shrink-0 relative">
+                                    <div
                                         className="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-110"
-                                        style={{ backgroundImage: `url(${product.image})` }}
+                                        style={{ backgroundImage: `url(${product.image || (product.images?.[0] ?? "")})` }}
                                     />
+                                    {(product.stock ?? 0) <= 0 && (
+                                        <div className="absolute inset-0 bg-black/60 backdrop-blur-[1px] flex items-center justify-center">
+                                            <span className="uppercase tracking-[0.2em] text-xs border border-white/30 rounded-full px-4 py-2 text-white/80">
+                                                Agotado
+                                            </span>
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* Product Info - Fixed height area - Same as ProductGrid */}

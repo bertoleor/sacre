@@ -14,9 +14,11 @@ export const supabase = supabaseUrl && supabaseAnonKey
     })
   : null;
 
-// Helper function to check if Supabase is configured
+// Helper function to check if Supabase is configured (server-side: URL +
+// service role; the catalog and API routes need the service key to operate)
 export function isSupabaseConfigured(): boolean {
-  return !!(supabaseUrl && supabaseAnonKey);
+  const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+  return !!(supabaseUrl && serviceKey);
 }
 
 // Server-side client (for API routes)

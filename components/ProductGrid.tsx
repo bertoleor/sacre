@@ -1,13 +1,15 @@
 import { Plus, Star } from "lucide-react";
-import { products } from "@/lib/data";
 import Link from "next/link";
 import FadeIn from "@/components/FadeIn";
 import GlassCard from "@/components/GlassCard";
+import { getProducts, getCatalogClient } from "@/lib/catalog";
 
-export default function ProductGrid({ category }: { readonly category?: string }) {
-    const filteredProducts = category 
-        ? products.filter(p => p.category === category) 
-        : products;
+export default async function ProductGrid({ category }: { readonly category?: string }) {
+    const supabase = getCatalogClient();
+    const allProducts = await getProducts(supabase);
+    const filteredProducts = category
+        ? allProducts.filter(p => p.category === category)
+        : allProducts;
 
     return (
         <section className="py-24 bg-[#050505]">
@@ -36,12 +38,19 @@ export default function ProductGrid({ category }: { readonly category?: string }
                                             <span className="text-xs text-burgundy uppercase tracking-wider">Destacado</span>
                                         </div>
                                     )}
-                                    
+
                                     <div className="aspect-square mb-6 overflow-hidden relative">
-                                        <div 
+                                        <div
                                             className="absolute inset-0 bg-cover bg-center transition-transform duration-500 group-hover:scale-105"
-                                            style={{ backgroundImage: `url(${product.image})` }}
+                                            style={{ backgroundImage: `url(${product.image || product.images?.[0] || "/images/bombones.png"})` }}
                                         />
+                                        {(product.stock ?? 0) <= 0 && (
+                                            <div className="absolute inset-0 bg-black/60 backdrop-blur-[1px] flex items-center justify-center">
+                                                <span className="uppercase tracking-[0.2em] text-xs border border-white/30 rounded-full px-4 py-2 text-white/80">
+                                                    Agotado
+                                                </span>
+                                            </div>
+                                        )}
                                     </div>
 
                                     <div className="p-6 pt-0 flex flex-col justify-end min-h-[200px] text-center">
