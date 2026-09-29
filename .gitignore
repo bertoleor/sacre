@@ -58,4 +58,4 @@ trivy-orn200*.log
 
 # nightly build logs
 sacre_build_*.log
-sacre_tdd_red.log
+sacre_tdd_red*.log
