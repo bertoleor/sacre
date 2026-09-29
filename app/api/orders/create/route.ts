@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createServerClient } from "@/lib/supabase/client";
+import {
+  resolveAndValidateItems,
+  type ResolvedOrderItem,
+} from "@/lib/orders/create";
 
 interface OrderItem {
   product_id?: string;
@@ -77,17 +81,17 @@ async function createSupabaseOrder(
 async function createOrderItems(
   supabase: ReturnType<typeof createServerClient>,
   orderId: string,
-  items: OrderItem[]
+  items: ResolvedOrderItem[]
 ) {
   if (!items.length) return;
 
   const orderItems = items.map((item) => ({
     order_id: orderId,
-    product_id: item.product_id || "unknown",
+    product_id: item.product_id,
     quantity: item.quantity,
-    unit_price: item.price,
-    subtotal: item.price * item.quantity,
-    product_name: item.productName || "Producto",
+    unit_price: item.unit_price,
+    subtotal: item.subtotal,
+    product_name: item.product_name,
   }));
 
   const { error: itemsError } = await supabase
@@ -99,7 +103,7 @@ async function createOrderItems(
 
 async function createMercadoPagoPreference(
   orderNumber: string,
-  items: OrderItem[],
+  items: ResolvedOrderItem[],
   siteUrl: string
 ): Promise<string | null> {
   const token = process.env.MERCADOPAGO_ACCESS_TOKEN;
@@ -111,16 +115,16 @@ async function createMercadoPagoPreference(
       {
         method: "POST",
         headers: {
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                  items: items.map((item) => ({
-                    title: item.productName || "Producto SACRÉ",
-                    quantity: item.quantity,
-                    unit_price: item.price,
-                    currency_id: "ARS",
-                  })),
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          items: items.map((item) => ({
+            title: item.product_name || "Producto SACRÉ",
+            quantity: item.quantity,
+            unit_price: item.unit_price,
+            currency_id: "ARS",
+          })),
           back_urls: {
             success: `${siteUrl}/checkout/success`,
             failure: `${siteUrl}/checkout/failure`,
@@ -153,10 +157,10 @@ async function sendConfirmationEmail(
     await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
               from: "SACRÉ <noreply@sacre.com.ar>",
               to: customerEmail,
         subject: `Confirmación de tu pedido ${orderNumber}`,
@@ -199,15 +203,25 @@ export async function POST(request: NextRequest) {
       });
     }
 
+    // ORN-127: resolve slugs → uuids and validate price/stock server-side
+    // BEFORE any insert. The client-supplied price never reaches the DB.
+    const resolved = await resolveAndValidateItems(supabase, body.items);
+    if (!resolved.ok) {
+      return NextResponse.json(
+        { error: resolved.message, code: resolved.code },
+        { status: resolved.status }
+      );
+    }
+
     const order = await createSupabaseOrder(supabase, body);
-    await createOrderItems(supabase, order.id, body.items);
+    await createOrderItems(supabase, order.id, resolved.items);
 
     let paymentUrl = null;
     if (body.payment_method === "mercadopago") {
       const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
       paymentUrl = await createMercadoPagoPreference(
         body.order_number,
-        body.items,
+        resolved.items,
         siteUrl
       );
     }
