@@ -92,3 +92,17 @@ the order.
   (body.subtotal still written to orders row; prices themselves are now
   DB-sourced, which closes the oversell/tamper window — total compare is a
   consistency nicety, ticketed as follow-up in ORN-127 Linear comment).
+- 2026-09-29 night turno 2 (T9, follow-up): cerrado el debt "client totals
+  never reach the orders row". RED logged (sacre_tdd_red_127b.log: expected
+  10000, got 2) con 1 test nuevo `server subtotal/total override client
+  values in the orders insert` en route.test.ts (`--no-isolate --pool=threads
+  --testTimeout=30000` por cold-start de vitest en este runner). GREEN
+  4/4 en el archivo, suite full 68/68 (5 files). Cambios:
+  `createSupabaseOrder` ahora recibe `amounts: { subtotal, total }`
+  computados server-side (subtotal = resolved.subtotal ya DB-sourced; total =
+  subtotal + shipping_cost, default 0 si ausente). Mismatch cliente-vs-server
+  se loguea con `console.warn("[orders/create] client-total mismatch", …)`
+  (sin PII, solo order_number + números). `sendConfirmationEmail` también
+  pasa el total server-side. TS signature cambió: createSupabaseOrder ahora
+  exige amounts — hay 1 sola call-site y la type-check tsc completa quedó
+  en curso en background (log separado si falla).

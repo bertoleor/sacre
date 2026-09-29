@@ -120,6 +120,48 @@ describe("POST /api/orders/create (route pins)", () => {
     expect(inserts.length).toBe(0); // validation happened BEFORE any insert
   });
 
+  it("server subtotal/total override client values in the orders insert", async () => {
+    // Follow-up ORN-127 T4 NOTE: body.subtotal/total must NOT be trusted for
+    // the orders row. The server recomputes from DB prices; the orders insert
+    // must carry the server values, and a mismatched client total must be
+    // logged (warn) for observability instead of silently accepted.
+    const UUID_A = "3f2504e0-4f89-11d3-9a0c-0305e82c3301";
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    createServerClientMock.mockReturnValue(
+      makeFakeClient(
+        [
+          {
+            data: [
+              {
+                id: UUID_A,
+                slug: "product-a",
+                name: "Product A",
+                price: 5000,
+                stock: 10,
+                is_active: true,
+              },
+            ],
+            error: null,
+          },
+          { data: { id: "order-1" }, error: null },
+          { data: null, error: null },
+        ],
+        inserts
+      )
+    );
+    const { POST } = await import("./route");
+    // Client lies: subtotal 2 / total 2, but DB says 2 × 5000 = 10000.
+    const res = await POST(request(BASE_BODY) as never);
+    expect(res.status).toBe(200);
+    const orderInsert = inserts.find((i) => i.table === "orders");
+    expect(orderInsert).toBeDefined();
+    const payload = orderInsert?.payload as { subtotal: number; total: number };
+    expect(payload.subtotal).toBe(10000); // DB-recomputed, NOT 2
+    expect(payload.total).toBe(10000); // shipping 0 in fixture (pickup)
+    expect(warnSpy).toHaveBeenCalled(); // mismatch logged
+    warnSpy.mockRestore();
+  });
+
   it("tampered client price never reaches the insert payload (DB price wins)", async () => {
     const UUID_A = "3f2504e0-4f89-11d3-9a0c-0305e82c3301";
     createServerClientMock.mockReturnValue(

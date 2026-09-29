@@ -48,7 +48,8 @@ function validateOrderData(body: OrderBody): string | null {
 
 async function createSupabaseOrder(
   supabase: ReturnType<typeof createServerClient>,
-  orderData: OrderBody
+  orderData: OrderBody,
+  amounts: { subtotal: number; total: number }
 ) {
   const { data: order, error: orderError } = await supabase
     .from("orders")
@@ -67,9 +68,9 @@ async function createSupabaseOrder(
       payment_method: orderData.payment_method,
       status: "pending",
       payment_status: "pending",
-      subtotal: orderData.subtotal,
+      subtotal: amounts.subtotal,
       shipping_cost: orderData.shipping_cost,
-      total: orderData.total,
+      total: amounts.total,
     })
     .select()
     .single();
@@ -213,7 +214,33 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const order = await createSupabaseOrder(supabase, body);
+    // Server-side totals: the DB is the only source of truth. The client
+    // subtotal/total stay in the request body for validation but NEVER reach
+    // the orders row. Divergence is logged for observability (a mismatch
+    // usually means a stale ISR cache or a tampered checkout).
+    const serverSubtotal = resolved.subtotal;
+    const shippingCost =
+      typeof body.shipping_cost === "number" && body.shipping_cost > 0
+        ? body.shipping_cost
+        : 0;
+    const serverTotal = serverSubtotal + shippingCost;
+    if (
+      body.subtotal !== serverSubtotal ||
+      body.total !== serverTotal
+    ) {
+      console.warn("[orders/create] client-total mismatch", {
+        order_number: body.order_number,
+        client_subtotal: body.subtotal,
+        client_total: body.total,
+        server_subtotal: serverSubtotal,
+        server_total: serverTotal,
+      });
+    }
+
+    const order = await createSupabaseOrder(supabase, body, {
+      subtotal: serverSubtotal,
+      total: serverTotal,
+    });
     await createOrderItems(supabase, order.id, resolved.items);
 
     let paymentUrl = null;
@@ -229,7 +256,7 @@ export async function POST(request: NextRequest) {
     await sendConfirmationEmail(
       body.customer.email,
       body.order_number,
-      body.total,
+      serverTotal,
       paymentUrl
     );
 
