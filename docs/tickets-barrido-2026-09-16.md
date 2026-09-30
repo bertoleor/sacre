@@ -20,7 +20,7 @@
 | P1-1 | Agregar script `test: vitest run` a `package.json` (hoy vitest se corre con `npx`) | Frontend | ABIERTO |
 | P1-2 | `next lint` eliminado en Next 16 — migrar a `eslint .` directo o quitar script `lint` | Frontend | ABIERTO |
 | P1-3 | `.env.example` sin `MERCADOPAGO_WEBHOOK_SECRET`, `EMAIL_FROM`, `NEXT_PUBLIC_SITE_URL` documentados vs uso real | Backend | ABIERTO |
-| P1-4 | `orders/create`: validación mínima (sin validar items/total) + modo demo que retorna éxito sin DB — endurecer o señalizar | Backend | ABIERTO |
+| P1-4 | `orders/create`: validación mínima (sin validar items/total) + modo demo que retorna éxito sin DB — endurecer o señalizar | Backend | EN_PROGRESO (PR #1) |
 | P1-5 | Webhook MP (verificado solo lectura): HMAC primero ✓, timing-safe ✓, ACK 200 ✓, idempotencia ✓, sin datos de tarjeta ✓, sin log de secretos ✓ — OK, sin cambios | — | VERIFICADO |
 | P1-6 | Archivos sueltos: `ARREGLO_VERCEL.md`, `subir-cambios.bat` y commits `aa`/`AA`/`red point` ensucian historial — squash/limpieza | DevOps | ABIERTO |
 
