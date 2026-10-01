@@ -108,6 +108,43 @@ describe("POST /api/orders/create (route pins)", () => {
     expect(inserts.length).toBe(0);
   });
 
+  it("demo mode: response carries demo:true + paymentUrl:null + one warn (P1-4)", async () => {
+    createServerClientMock.mockImplementation(() => {
+      throw new Error("Missing Supabase configuration");
+    });
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const { POST } = await import("./route");
+    const res = await POST(request(BASE_BODY) as never);
+    const json = await res.json();
+    // P1-4: the demo order was NOT persisted and MP never ran — the response
+    // must say so explicitly so no consumer mistakes demo for a real order.
+    expect(res.status).toBe(200);
+    expect(json.demo).toBe(true);
+    expect(json.paymentUrl).toBeNull();
+    expect(json.success).toBe(true);
+    expect(warnSpy).toHaveBeenCalled();
+    warnSpy.mockRestore();
+  });
+
+  it("invalid quantity answers 400 BEFORE any DB call (P1-4 shape validation)", async () => {
+    // The fake client would answer unknown_product; with shape validation
+    // wired BEFORE resolveAndValidateItems, a quantity<=0 body must fail
+    // without a single supabase call (from() never invoked).
+    const client = makeFakeClient([{ data: [], error: null }], inserts);
+    createServerClientMock.mockReturnValue(client);
+    const { POST } = await import("./route");
+    const badBody = {
+      ...BASE_BODY,
+      items: [{ product_id: "product-a", productName: "Product A", quantity: 0, price: 1 }],
+    };
+    const res = await POST(request(badBody) as never);
+    const json = await res.json();
+    expect(res.status).toBe(400);
+    expect(json.error).toBe("Cantidad inválida en el ítem 1");
+    expect(client.from).not.toHaveBeenCalled();
+    expect(inserts.length).toBe(0);
+  });
+
   it("unknown slug answers 400 unknown_product and never inserts an order", async () => {
     createServerClientMock.mockReturnValue(
       makeFakeClient([{ data: [], error: null }], inserts)

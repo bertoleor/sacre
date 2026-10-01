@@ -4,47 +4,11 @@ import {
   resolveAndValidateItems,
   type ResolvedOrderItem,
 } from "@/lib/orders/create";
-
-interface OrderItem {
-  product_id?: string;
-  productName?: string;
-  quantity: number;
-  price: number;
-}
-
-interface Customer {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone?: string;
-}
-
-interface Shipping {
-  method: string;
-  addressLine1?: string;
-  city?: string;
-  state?: string;
-  postalCode?: string;
-}
-
-interface OrderBody {
-  order_number: string;
-  customer: Customer;
-  shipping: Shipping;
-  payment_method: string;
-  items: OrderItem[];
-  subtotal: number;
-  shipping_cost?: number;
-  total: number;
-}
-
-function validateOrderData(body: OrderBody): string | null {
-  if (!body.order_number) return "Faltan datos requeridos";
-  if (!body.customer?.email) return "Email del cliente es requerido";
-  if (!body.items?.length) return "El carrito está vacío";
-  if (body.subtotal === undefined) return "Subtotal requerido";
-  return null;
-}
+import {
+  validateOrderData,
+  type OrderBody,
+} from "@/lib/orders/validation";
+import { demoOrderResponse } from "@/lib/orders/demo";
 
 async function createSupabaseOrder(
   supabase: ReturnType<typeof createServerClient>,
@@ -195,13 +159,12 @@ export async function POST(request: NextRequest) {
     try {
       supabase = createServerClient();
     } catch {
-      // Demo mode - Supabase not configured
-      console.log("Supabase not configured, returning mock response");
-      return NextResponse.json({
-        success: true,
-        orderId: body.order_number,
-        message: "Pedido creado (modo demo - sin base de datos)",
-      });
+      // Demo mode - Supabase not configured. The order is NOT persisted and
+      // MercadoPago never runs; the response must say so explicitly (P1-4).
+      console.warn(
+        "[orders/create] Supabase not configured — answering in DEMO mode; the order is NOT persisted"
+      );
+      return NextResponse.json(demoOrderResponse(body.order_number));
     }
 
     // ORN-127: resolve slugs → uuids and validate price/stock server-side
