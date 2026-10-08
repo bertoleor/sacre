@@ -52,3 +52,7 @@ trivy-orn200*.log
 *.swp
 *.swo
 *~
+
+# Logs de runs cron (T5 vitest debug)
+vitest-t5-*.log
+tsc-t5.log
