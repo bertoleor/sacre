@@ -13,6 +13,7 @@
 | [`reporte-producto-marketing-estilo-2026-09-14.md`](reporte-producto-marketing-estilo-2026-09-14.md) | **Doc de producto**: qué es, catálogo, flujo de checkout/webhook MP, admin, tono de marketing, identidad visual, estado y próximos pasos (F1–F5). |
 | [`07-repos-relacionados.md`](07-repos-relacionados.md) | Repos relacionados: dónde vive cada cosa del ecosistema SACRÉ (mapeo por proyecto). |
 | [`STATUS.md`](STATUS.md) | **Estado técnico** verificado 2026-09-15: build, tests, DB, cumplimiento vs spec y pendientes F1–F5. |
+| [`plans/PRD-sacre-shop-minimo.md`](plans/PRD-sacre-shop-minimo.md) | **PRD del producto**: problema, usuarios objetivo, funnel mínimo, scope, restricciones, criterios de éxito y fases F1–F5. |
 | [`../README.md`](../README.md) | Landing de setup del repo (Stack, Struktura, Spec y fases). |
 
 ## Mapas de referencia (fuera del repo, canónicos)
