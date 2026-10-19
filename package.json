@@ -1,39 +1,47 @@
 {
-    "name": "sacre-shop",
-    "version": "0.1.0",
-    "private": true,
-    "scripts": {
-        "dev": "next dev",
-        "build": "next build",
-        "start": "next start",
-        "lint": "next lint",
-        "test": "vitest run"
-    },
-    "dependencies": {
-        "@supabase/supabase-js": "^2.47.0",
-        "@tiptap/extension-placeholder": "^3.20.1",
-        "@tiptap/react": "^3.20.1",
-        "@tiptap/starter-kit": "^3.20.1",
-        "framer-motion": "^12.35.1",
-        "lucide-react": "^0.469.0",
-        "next": "16.3.6",
-        "react": "^19.2.4",
-        "react-dom": "^19.2.4"
-    },
-    "devDependencies": {
-        "@eslint/js": "^9.17.0",
-        "@next/eslint-plugin-next": "^16.1.6",
-        "@tailwindcss/postcss": "^4.0.0",
-        "@types/node": "^22.0.0",
-        "@types/react": "^19.0.0",
-        "@types/react-dom": "^19.0.0",
-        "eslint": "^9.17.0",
-        "eslint-config-next": "^16.1.6",
-        "globals": "^15.13.0",
-        "postcss": "^8.4.49",
-        "tailwindcss": "^4.0.0",
-        "typescript": "^5.7.0",
-        "typescript-eslint": "^8.19.0",
-        "vitest": "^5.0.2"
-    }
+  "name": "sacre-shop",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "test": "vitest run",
+    "knip": "knip",
+    "biome:scan": "npx -y @biomejs/biome lint .",
+    "copy-paste:check": "jscpd .",
+    "spell:check": "cspell README.md docs"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.47.0",
+    "@tiptap/extension-placeholder": "^3.20.1",
+    "@tiptap/react": "^3.20.1",
+    "@tiptap/starter-kit": "^3.20.1",
+    "framer-motion": "^12.35.1",
+    "lucide-react": "^0.469.0",
+    "next": "16.3.6",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  },
+  "devDependencies": {
+    "@cspell/dict-es-es": "^3.0.9",
+    "@eslint/js": "^9.17.0",
+    "@next/eslint-plugin-next": "^16.1.6",
+    "@tailwindcss/postcss": "^4.0.0",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "cspell": "^10.4.0",
+    "eslint": "^9.17.0",
+    "eslint-config-next": "^16.1.6",
+    "globals": "^15.13.0",
+    "jscpd": "^5.4.1",
+    "knip": "^6.42.0",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^4.0.0",
+    "typescript": "^5.7.0",
+    "typescript-eslint": "^8.19.0",
+    "vitest": "^5.0.2"
+  }
 }
