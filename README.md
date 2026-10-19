@@ -17,6 +17,8 @@ Next.js 16 + React 19 + Tailwind 4 · Supabase · Mercado Pago · Resend. Voseo 
 
 Índice consolidado de docs en [`docs/`](docs/README.md) — incluye el [reporte de producto, marketing y estilo](docs/reporte-producto-marketing-estilo-2026-09-14.md).
 
+Set infaltables v2 (rutas canónicas): [AGENTS.md](AGENTS.md) · [SECURITY.md](SECURITY.md) · [CONTRIBUTING.md](CONTRIBUTING.md) · [CHANGELOG.md](CHANGELOG.md) · [ARCHITECTURE.md](ARCHITECTURE.md) · [DATABASE.md](docs/DATABASE.md). Pendientes: `LICENSE` · `docs/DESIGN.md` · `docs/marca.md` · `docs/plan-accion-*.md` · `docs/runbooks/` (ver `AGENTS.md`).
+
 ## Spec y fases
 
 Canónico: `E:/Hermes/docs/plans/sacre-spec.md` — F1 DB+RLS → F2 catálogo real → F3 checkout MP+webhook → F4 admin pedidos → F5 pulido. Tickets Linear `[SACRE] F1..F5` (team Ornella).
