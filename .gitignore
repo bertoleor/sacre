@@ -56,3 +56,7 @@ trivy-orn200*.log
 # Logs de runs cron (T5 vitest debug)
 vitest-t5-*.log
 tsc-t5.log
+
+# Artefactos de runs locales (E2E auth P0-1 + indexador de código)
+dev-e2e.log
+.codegraph/
