@@ -1,32 +1,21 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Lock, Eye, EyeOff } from "lucide-react";
+import { useActionState, useState } from "react";
+import Link from "next/link";
+import { Eye, EyeOff, Lock } from "lucide-react";
+import { loginAction, type LoginActionState } from "./actions";
 
+const initialState: LoginActionState = { error: "" };
+
+/**
+ * SACRÉ P0-1 — Login admin con Supabase Auth real.
+ * Sin credenciales hardcodeadas ni localStorage: el form postea al server
+ * action `loginAction` (ver actions.ts) que autentica contra GoTrue y setea
+ * la sesión como cookies httpOnly server-side.
+ */
 export default function AdminLogin() {
-    const router = useRouter();
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+    const [state, formAction, pending] = useActionState(loginAction, initialState);
     const [showPassword, setShowPassword] = useState(false);
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
-
-    const handleLogin = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setError("");
-        setLoading(true);
-
-        // Hardcoded credentials
-        if (username === "sacre" && password === "chocolate") {
-            // Set a simple cookie or localStorage for session
-            localStorage.setItem("admin_session", "true");
-            router.push("/admin");
-        } else {
-            setError("Credenciales incorrectas");
-            setLoading(false);
-        }
-    };
 
     return (
         <main className="min-h-screen bg-[#050505] flex items-center justify-center px-6">
@@ -44,21 +33,21 @@ export default function AdminLogin() {
                 </div>
 
                 {/* Login Form */}
-                <form onSubmit={handleLogin} className="space-y-6">
+                <form action={formAction} className="space-y-6">
                     <div className="bg-white/5 border border-white/10 rounded-2xl p-8">
                         <div className="space-y-5">
-                            {/* Username */}
+                            {/* Email */}
                             <div className="space-y-2">
-                                <label htmlFor="username" className="block text-xs uppercase tracking-widest text-white/50">
-                                    Usuario
+                                <label htmlFor="email" className="block text-xs uppercase tracking-widest text-white/50">
+                                    Email
                                 </label>
                                 <input
-                                    type="text"
-                                    id="username"
-                                    value={username}
-                                    onChange={(e) => setUsername(e.target.value)}
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    autoComplete="email"
                                     className="w-full bg-transparent border border-white/20 rounded-lg px-4 py-3 text-white placeholder-white/20 focus:border-burgundy focus:outline-none transition-colors"
-                                    placeholder="Ingresa tu usuario"
+                                    placeholder="admin@sacre.com.ar"
                                     required
                                 />
                             </div>
@@ -72,8 +61,8 @@ export default function AdminLogin() {
                                     <input
                                         type={showPassword ? "text" : "password"}
                                         id="password"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
+                                        name="password"
+                                        autoComplete="current-password"
                                         className="w-full bg-transparent border border-white/20 rounded-lg px-4 py-3 pr-12 text-white placeholder-white/20 focus:border-burgundy focus:outline-none transition-colors"
                                         placeholder="Ingresa tu contraseña"
                                         required
@@ -82,6 +71,7 @@ export default function AdminLogin() {
                                         type="button"
                                         onClick={() => setShowPassword(!showPassword)}
                                         className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
+                                        aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
                                     >
                                         {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                                     </button>
@@ -89,17 +79,19 @@ export default function AdminLogin() {
                             </div>
 
                             {/* Error message */}
-                            {error && (
-                                <div className="text-red-400 text-sm text-center">{error}</div>
+                            {state.error && (
+                                <div className="text-red-400 text-sm text-center" role="alert">
+                                    {state.error}
+                                </div>
                             )}
 
                             {/* Submit */}
                             <button
                                 type="submit"
-                                disabled={loading}
+                                disabled={pending}
                                 className="w-full bg-burgundy text-black py-4 rounded-lg uppercase tracking-widest text-xs hover:bg-white transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
                             >
-                                {loading ? (
+                                {pending ? (
                                     <div className="w-5 h-5 border-2 border-black/20 border-t-black rounded-full animate-spin" />
                                 ) : (
                                     <>
@@ -114,9 +106,9 @@ export default function AdminLogin() {
 
                 {/* Back to site */}
                 <div className="text-center mt-8">
-                    <a href="/" className="text-white/40 hover:text-white text-sm transition-colors">
+                    <Link href="/" className="text-white/40 hover:text-white text-sm transition-colors">
                         ← Volver al sitio
-                    </a>
+                    </Link>
                 </div>
             </div>
         </main>

@@ -20,7 +20,8 @@ describe("validateLoginForm", () => {
     it("rechaza inputs que no son string (undefined/null/number)", () => {
         expect(validateLoginForm(undefined, "x").ok).toBe(false);
         expect(validateLoginForm("a@b.com", null).ok).toBe(false);
-        // @ts-expect-error probe adversarial de tipo
+        // La firma acepta `unknown` a propósito (no necesita @ts-expect-error):
+        // el guard de tipo real vive adentro de validateLoginForm.
         expect(validateLoginForm(123, "x").ok).toBe(false);
     });
 

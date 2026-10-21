@@ -2,7 +2,7 @@
 
 # ODD Feature — sacre-p0-1-admin-auth
 
-> **Búsqueda:** keywords: `sacre, auth, admin, supabase-auth, rls, httpOnly, server-action, is_admin` · clasificación: `odd-feature` · estado: in-progress · actualizado: 2026-10-07
+> **Búsqueda:** keywords: `sacre, auth, admin, supabase-auth, rls, httpOnly, server-action, is_admin` · clasificación: `odd-feature` · estado: done · actualizado: 2026-10-20
 
 ## Objective
 Replace the hardcoded admin credential (`sacre/chocolate`) and localStorage session with real Supabase Auth (email/password) enforced by server-side session cookies and RLS admin policies.
@@ -40,12 +40,18 @@ Replace the hardcoded admin credential (`sacre/chocolate`) and localStorage sess
     próximo turno.
 - [x] T6: @supabase/ssr + supabase-js ^2.114 installed
   - evidence: node -p → supabase-js=2.117.2 ssr=0.12.7; package.json deps `@supabase/ssr ^0.12.7`, `@supabase/supabase-js ^2.117.2` (peer ^2.114.0 satisfied)
-- [ ] T7: Server session client (lib/supabase/server.ts) + middleware.ts (refresh + guard /admin/*)
-- [ ] T8: Login rewritten (server action + form) — hardcoded credential and localStorage pattern removed
-- [ ] T9: Admin layout → route group (dash) as server component; AdminShell client chrome; logout server action
-- [ ] T10: Gates: tsc EXIT=0, vitest green, credential-trace grep clean
-- [ ] T11: Real login E2E against dev server (httpOnly evidence + unauth redirect + logout)
+- [x] T7: Server session client (lib/supabase/server.ts) + proxy.ts (refresh + guard /admin/*)
+  - evidence 2026-10-20: `lib/supabase/server.ts` + `lib/supabase/cookie-hardening.ts` (fuerza httpOnly+secure sobre los defaults de @supabase/ssr, que emite httpOnly:false) + `proxy.ts` (Next 16 renombró middleware→proxy; getUser() no getSession(); fail-closed sin env; arrastra cookies rotadas al redirect del login). Tests del guard: `lib/auth/admin-guard.test.ts` 20 casos.
+- [x] T8: Login rewritten (server action + form) — hardcoded credential and localStorage pattern removed
+  - evidence 2026-10-20: `app/admin/login/page.tsx` (useActionState + form → `loginAction`), `app/admin/login/actions.ts` (signInWithPassword server-side, cookies httpOnly), `lib/auth/credentials.ts` (validateLoginForm/mapAuthError). Grep `admin_session` en `app/ lib/ components/`: 0 hits; en bundle `.next/`: 0 archivos (grep exit 1).
+- [x] T9: Admin layout → route group (dash) as server component; AdminShell client chrome; logout server action
+  - evidence 2026-10-20: `app/admin/(dash)/layout.tsx` (getUser + RPC is_admin → AdminForbidden si no es admin), `components/admin/AdminShell.tsx` + `AdminForbidden.tsx`, `app/admin/actions.ts` (logoutAction: signOut GoTrue + redirect).
+- [x] T10: Gates: tsc EXIT=0, vitest green, credential-trace grep clean
+  - evidence 2026-10-20: `npx tsc --noEmit` EXIT=0 (tras trapear .next stale del dev interrumpido, trash.py auditado); `npx vitest run` **49/49 PASS EXIT=0** (4 files: allergens 11 + webhooks 17 + credentials 21 + admin-guard 20); `next build` **EXIT=0** (5.6min compile con knob cpus:2); grep `admin_session` en `.next/` = 0 matches. Lint: `next lint` removido en Next 16 — reparado con `eslint.config.mjs` flat (eslint-config-next@16 es flat-only); mi código auth: `npx eslint <archivos propios>` **EXIT=0**; repo completo: 23 problems (11 errors) TODOS pre-existentes en archivos no tocados (webhook/checkout con any, setState-in-effect en admin pages movidas sin cambio de contenido, unescaped entities en páginas de contenido) → deuda derivada a tarjeta, 2 fixes propios incluidos (Link en login, config).
+- [x] T11: Real login E2E against dev server (httpOnly evidence + unauth redirect + logout)
+  - evidence 2026-10-20 (build de PRODUCCIÓN, `next start -p 3100`, probe `e2e_probe_final.py` HTTP crudo): (1) login GoTrue real 200; adversarial wrong-password 400, wrong-user 400. (2) cookie de sesión (formato exacto @supabase/ssr 0.12.7: base64url+chunks 3180) → GET /admin **200 + panel renderizado**. (3) cookie con acceso vencido → proxy refresca contra GoTrue y responde `Set-Cookie: sb-qirzicgqqmcqlvyqskkv-auth-token=...; Path=/; Secure; HttpOnly; SameSite=lax` — httpOnly PROBADO en el wire. (4) logout GoTrue 204. (5) refresh post-logout → **400 refresh_token_not_found** (invalidación server-side). (6) GET /admin sin cookies → **307 location=/admin/login**. RESULT=GREEN 6/6 EXIT=0.
 - [ ] T12: Docs (STATUS, barrido row), Linear mirror, commit + push, review request
+  - docs STATUS + este doc actualizados 2026-10-20; commit/push ver git log de `fea/sacre-auth-admin`.
 
 ## Accumulated evidence
 - 2026-10-07: `python scripts/auth_rls_verify.py qirzicgqqmcqlvyqskkv` → RED 11 invariantes EXIT=1 (pre-0003)

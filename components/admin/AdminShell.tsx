@@ -1,17 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { useState } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { 
-    LayoutDashboard, 
-    Package, 
-    ShoppingCart, 
-    LogOut, 
-    Menu, 
+import {
+    LayoutDashboard,
+    Package,
+    ShoppingCart,
+    LogOut,
+    Menu,
     X,
-    ChevronLeft
+    ChevronLeft,
 } from "lucide-react";
+import { logoutAction } from "@/app/admin/actions";
 
 const navigation = [
     { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
@@ -19,50 +20,26 @@ const navigation = [
     { name: "Pedidos", href: "/admin/pedidos", icon: ShoppingCart },
 ];
 
-export default function AdminLayout({
+/**
+ * SACRÉ P0-1 — Chrome client del panel admin (sidebar + topbar).
+ * La AUTENTICACIÓN no vive acá: el layout server ya validó sesión + is_admin
+ * antes de renderizar este componente. Acá solo queda estado de UI (sidebar
+ * mobile) y el logout, que es un server action (revoca en GoTrue y limpia
+ * cookies httpOnly — nada de remover flags de localStorage).
+ */
+export default function AdminShell({
     children,
 }: {
     children: React.ReactNode;
 }) {
-    const router = useRouter();
     const pathname = usePathname();
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [loading, setLoading] = useState(true);
     const [sidebarOpen, setSidebarOpen] = useState(false);
-
-    useEffect(() => {
-        // Check authentication
-        const session = localStorage.getItem("admin_session");
-        if (!session) {
-            router.push("/admin/login");
-        } else {
-            setIsAuthenticated(true);
-        }
-        setLoading(false);
-    }, [router]);
-
-    const handleLogout = () => {
-        localStorage.removeItem("admin_session");
-        router.push("/admin/login");
-    };
-
-    if (loading) {
-        return (
-            <div className="min-h-screen bg-[#050505] flex items-center justify-center">
-                <div className="w-8 h-8 border-2 border-white/20 border-t-burgundy rounded-full animate-spin" />
-            </div>
-        );
-    }
-
-    if (!isAuthenticated) {
-        return null;
-    }
 
     return (
         <div className="min-h-screen bg-[#050505]">
             {/* Mobile sidebar overlay */}
             {sidebarOpen && (
-                <div 
+                <div
                     className="fixed inset-0 z-40 bg-black/50 lg:hidden"
                     onClick={() => setSidebarOpen(false)}
                 />
@@ -75,9 +52,10 @@ export default function AdminLayout({
                     <Link href="/admin" className="font-cronde text-2xl text-white">
                         SACRÉ
                     </Link>
-                    <button 
+                    <button
                         onClick={() => setSidebarOpen(false)}
                         className="lg:hidden text-white/40 hover:text-white"
+                        aria-label="Cerrar menú"
                     >
                         <X size={24} />
                     </button>
@@ -86,15 +64,15 @@ export default function AdminLayout({
                 {/* Navigation */}
                 <nav className="p-4 space-y-2">
                     {navigation.map((item) => {
-                        const isActive = pathname === item.href || 
+                        const isActive = pathname === item.href ||
                             (item.href !== "/admin" && pathname.startsWith(item.href));
                         return (
                             <Link
                                 key={item.name}
                                 href={item.href}
                                 className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
-                                    isActive 
-                                        ? "bg-burgundy/10 text-burgundy" 
+                                    isActive
+                                        ? "bg-burgundy/10 text-burgundy"
                                         : "text-white/60 hover:text-white hover:bg-white/5"
                                 }`}
                                 onClick={() => setSidebarOpen(false)}
@@ -106,15 +84,17 @@ export default function AdminLayout({
                     })}
                 </nav>
 
-                {/* Logout */}
+                {/* Logout — server action: revoca sesión en GoTrue + limpia cookies */}
                 <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-white/10">
-                    <button
-                        onClick={handleLogout}
-                        className="flex items-center gap-3 px-4 py-3 w-full text-white/60 hover:text-red-400 hover:bg-red-400/5 rounded-xl transition-colors"
-                    >
-                        <LogOut size={20} />
-                        <span className="text-sm">Cerrar Sesión</span>
-                    </button>
+                    <form action={logoutAction}>
+                        <button
+                            type="submit"
+                            className="flex items-center gap-3 px-4 py-3 w-full text-white/60 hover:text-red-400 hover:bg-red-400/5 rounded-xl transition-colors"
+                        >
+                            <LogOut size={20} />
+                            <span className="text-sm">Cerrar Sesión</span>
+                        </button>
+                    </form>
                 </div>
             </div>
 
@@ -125,13 +105,14 @@ export default function AdminLayout({
                     <button
                         onClick={() => setSidebarOpen(true)}
                         className="lg:hidden text-white/60 hover:text-white"
+                        aria-label="Abrir menú"
                     >
                         <Menu size={24} />
                     </button>
 
                     <div className="flex items-center gap-4 ml-auto">
-                        <Link 
-                            href="/" 
+                        <Link
+                            href="/"
                             className="flex items-center gap-2 text-white/40 hover:text-white text-sm transition-colors"
                         >
                             <ChevronLeft size={16} />
