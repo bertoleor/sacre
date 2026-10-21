@@ -52,3 +52,9 @@ trivy-orn200*.log
 *.swp
 *.swo
 *~
+
+# rdd receipts + logs locales de TDD/build — P1-6: nunca trackear (los ya trackeados fueron untrackeados en el chore 2026-10-20)
+.rdd/
+sacre_build_*.log
+sacre_tdd_red*.log
+sacre_vitest*.log
