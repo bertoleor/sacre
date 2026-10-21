@@ -9,7 +9,7 @@
 
 | # | Título | Dueño (rol) | Estado |
 |---|--------|-------------|--------|
-| P0-1 | Auth admin: credenciales hardcodeadas `sacre/chocolate` en cliente + sesión en `localStorage` (`app/admin/login/page.tsx`, `app/admin/layout.tsx`) — pasar a Supabase Auth + RLS, requiere LGTM | Backend + Seguridad | ABIERTO |
+| P0-1 | Auth admin: credenciales hardcodeadas `sacre/chocolate` en cliente + sesión en `localStorage` (`app/admin/login/page.tsx`, `app/admin/layout.tsx`) — pasar a Supabase Auth + RLS, requiere LGTM | Backend + Seguridad | FIX EN RAMA `fea/sacre-auth-admin` (push 2026-10-20, LGTM owner otorgado): Supabase Auth server-side + cookies httpOnly + `proxy.ts` 307 + RLS `0003` en t5; E2E 6/6 GREEN. Merge a main pendiente de review — ver [[projects/sacre-shop/odd/tasks/sacre-p0-1-admin-auth]] |
 | P0-2 | Commit pendiente del cableado Resend (orders/create + webhook MP + `lib/email/` + `package.json`/`lock`) — revisar diff pagos y mergear con LGTM | Backend (pagos) | ABIERTO |
 | P0-3 | Sin proyecto Supabase SACRE en la org: catálogo hardcodeado en `lib/data.ts`, dashboard admin con mocks — F1 DB+RLS pendiente | Backend/DBA | ABIERTO |
 

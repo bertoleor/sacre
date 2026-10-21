@@ -50,8 +50,8 @@ Replace the hardcoded admin credential (`sacre/chocolate`) and localStorage sess
   - evidence 2026-10-20: `npx tsc --noEmit` EXIT=0 (tras trapear .next stale del dev interrumpido, trash.py auditado); `npx vitest run` **49/49 PASS EXIT=0** (4 files: allergens 11 + webhooks 17 + credentials 21 + admin-guard 20); `next build` **EXIT=0** (5.6min compile con knob cpus:2); grep `admin_session` en `.next/` = 0 matches. Lint: `next lint` removido en Next 16 — reparado con `eslint.config.mjs` flat (eslint-config-next@16 es flat-only); mi código auth: `npx eslint <archivos propios>` **EXIT=0**; repo completo: 23 problems (11 errors) TODOS pre-existentes en archivos no tocados (webhook/checkout con any, setState-in-effect en admin pages movidas sin cambio de contenido, unescaped entities en páginas de contenido) → deuda derivada a tarjeta, 2 fixes propios incluidos (Link en login, config).
 - [x] T11: Real login E2E against dev server (httpOnly evidence + unauth redirect + logout)
   - evidence 2026-10-20 (build de PRODUCCIÓN, `next start -p 3100`, probe `e2e_probe_final.py` HTTP crudo): (1) login GoTrue real 200; adversarial wrong-password 400, wrong-user 400. (2) cookie de sesión (formato exacto @supabase/ssr 0.12.7: base64url+chunks 3180) → GET /admin **200 + panel renderizado**. (3) cookie con acceso vencido → proxy refresca contra GoTrue y responde `Set-Cookie: sb-qirzicgqqmcqlvyqskkv-auth-token=...; Path=/; Secure; HttpOnly; SameSite=lax` — httpOnly PROBADO en el wire. (4) logout GoTrue 204. (5) refresh post-logout → **400 refresh_token_not_found** (invalidación server-side). (6) GET /admin sin cookies → **307 location=/admin/login**. RESULT=GREEN 6/6 EXIT=0.
-- [ ] T12: Docs (STATUS, barrido row), Linear mirror, commit + push, review request
-  - docs STATUS + este doc actualizados 2026-10-20; commit/push ver git log de `fea/sacre-auth-admin`.
+- [x] T12: Docs (STATUS, barrido row), Linear mirror, commit + push, review request
+  - docs STATUS + barrido row P0-1 actualizados 2026-10-20; commit+push `84d633f` + `dc5d685` en `fea/sacre-auth-admin` (origin en sync; receipts `.rdd/` untracked por contrato, commit 6384967). Linear mirror: NO — mirror deprecado por auditoría de flota 2026-09-27 (`docs/audits/2026-09-27-auditoria-kanban-linear.md`: 0/190 matchea, genera duplicados); kanban es la fuente de verdad. Review request: kanban `t_0f74c480` → review, LGTM humano requerido antes de merge a main.
 
 ## Accumulated evidence
 - 2026-10-07: `python scripts/auth_rls_verify.py qirzicgqqmcqlvyqskkv` → RED 11 invariantes EXIT=1 (pre-0003)
@@ -68,4 +68,4 @@ Replace the hardcoded admin credential (`sacre/chocolate`) and localStorage sess
 - 0003 re-grants DML to `authenticated` on admin tables (0002 had revoked ALL write): without the grant, RLS passes but Postgres ACL denies (403 permission denied) — verified live. The DE's audit invariant (anon without write grants) stays GREEN; the perimeter is now is_admin() via RLS.
 
 ## Next step
-T5: write lib/auth tests first → RED → implement validateLoginForm/mapAuthError → GREEN; then T7-T9 server session wiring.
+Merge `fea/sacre-auth-admin` → main tras LGTM humano (review kanban `t_0f74c480`) + cierre formal del barrido P0-1. Deuda derivada (no bloquea): lint pre-existente 23 problems, F4 admin sobre DB real.
